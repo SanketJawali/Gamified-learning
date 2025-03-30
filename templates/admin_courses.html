@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Manage Courses</h2>
+
+    <!-- Add Course Form -->
+    <form method="POST">
+        <input type="text" name="course_name" placeholder="Course Name" required>
+        <input type="text" name="course_image" placeholder="Image File (e.g., python_logo.png)" required>
+        <input type="submit" name="add_course" value="Add Course">
+    </form>
+
+    <!-- Course List -->
+    <h3>Existing Courses</h3>
+    <ul>
+        {% for course in courses %}
+            <li>
+                {{ course.name }} (Image: {{ course.image }})
+                <form method="POST" style="display:inline;">
+                    <input type="hidden" name="course_id" value="{{ course.id }}">
+                    <input type="submit" name="delete_course" value="Delete" onclick="return confirm('Are you sure?');">
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('profile') }}" class="back-btn">Back to Profile</a>
+{% endblock %}

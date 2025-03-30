@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Register</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ request.form.name or '' }}">
+        {% if errors.name %}<span class="error">{{ errors.name }}</span>{% endif %}
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{ request.form.username or '' }}">
+        {% if errors.username %}<span class="error">{{ errors.username }}</span>{% endif %}
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ request.form.email or '' }}">
+        {% if errors.email %}<span class="error">{{ errors.email }}</span>{% endif %}
+
+        <label for="mobile">Mobile:</label>
+        <input type="text" id="mobile" name="mobile" value="{{ request.form.mobile or '' }}">
+        {% if errors.mobile %}<span class="error">{{ errors.mobile }}</span>{% endif %}
+
+        <!-- Replaced "Class" with "Stream" and "Year" dropdowns -->
+        <div class="dropdown-container">
+            <div class="dropdown-item">
+                <label for="stream">Stream:</label>
+                <select id="stream" name="stream">
+                    <option value="" {% if not request.form.stream %}selected{% endif %}>Select Stream</option>
+                    <option value="Engineering" {% if request.form.stream == 'Engineering' %}selected{% endif %}>Engineering</option>
+                    <option value="Other" {% if request.form.stream == 'Other' %}selected{% endif %}>Other</option>
+                </select>
+                {% if errors.stream %}<span class="error">{{ errors.stream }}</span>{% endif %}
+            </div>
+            <div class="dropdown-item">
+                <label for="year">Year:</label>
+                <select id="year" name="year">
+                    <option value="" {% if not request.form.year %}selected{% endif %}>Select Year</option>
+                    <option value="1st Year" {% if request.form.year == '1st Year' %}selected{% endif %}>1st Year</option>
+                    <option value="2nd Year" {% if request.form.year == '2nd Year' %}selected{% endif %}>2nd Year</option>
+                    <option value="3rd Year" {% if request.form.year == '3rd Year' %}selected{% endif %}>3rd Year</option>
+                    <option value="4th Year" {% if request.form.year == '4th Year' %}selected{% endif %}>4th Year</option>
+                </select>
+                {% if errors.year %}<span class="error">{{ errors.year }}</span>{% endif %}
+            </div>
+        </div>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+        {% if errors.password %}<span class="error">{{ errors.password }}</span>{% endif %}
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" id="confirm_password" name="confirm_password">
+        {% if errors.confirm_password %}<span class="error">{{ errors.confirm_password }}</span>{% endif %}
+
+        <input type="submit" value="Register">
+        <u>Already have an account?</u>
+        <a href="{{ url_for('login') }}"> Login</a>
+    </form>
+    
+</body>
+</html>

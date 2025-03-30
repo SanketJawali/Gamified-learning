@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Available Courses</h2>
+    
+    <!-- Menu Dropdown -->
+    <!-- <div class="menu-container">
+        <button class="menu-btn">Menu ▼</button>
+        <div class="menu-content">
+            <a href="{{ url_for('contact_support') }}">Contact Support</a>
+        </div>
+    </div> -->
+
+    <!-- Course Display -->
+    {% if user.course %}
+    <div>
+        <p>You've selected: {{ user.course }}</p>
+        <a href="{{ url_for('lessons') }}">Go to Lessons</a>
+    </div>
+    {% else %}
+        {% for course in courses %}
+            <div class="course-card" onclick="selectCourse('{{ course.name }}')">
+                <img src="{{ url_for('static', filename=course.image) }}" alt="{{ course.name }} Course" class="course-image">
+                <p class="course-name">{{ course.name }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Profile</h2>
+    <p>Name: {{ user.name }}</p>
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Mobile: {{ user.mobile }}</p>
+    <p>Selcted Stream: {{ user.stream }}</p>
+    <p>Year: {{ user.year }}</p>
+    <p>Course: {{ user.course or 'Not selected' }}</p>
+    <p>Completed Lessons: {{ user.completed_lessons or 'None' }}</p>
+    <a href="{{ url_for('courses') }}" class="back-btn">Back to Courses</a>
+{% endblock %}
