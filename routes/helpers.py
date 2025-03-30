@@ -1,4 +1,9 @@
-import os
+import markdown, os
+
+def markdown_to_html(markdown_text):
+    """Convert Markdown text to HTML"""
+    html = markdown.markdown(markdown_text)
+    return html
 
 def get_chapter_content(filename):
     # Define the base directory

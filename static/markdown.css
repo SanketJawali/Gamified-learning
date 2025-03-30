@@ -1,0 +1,38 @@
+/* Complete reset for markdown container */
+.markdown-content {
+    all: initial; /* Reset all properties */
+    display: block; /* Needed because 'initial' sets display: inline */
+}
+
+/* Reset ALL child elements */
+.markdown-content * {
+    all: revert; /* Revert to browser defaults */
+    box-sizing: border-box; /* Sensible box model */
+    max-width: 100%; /* Prevent overflow */
+}
+
+/* Now apply clean markdown styling */
+.markdown-content h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+    font-weight: bold;
+}
+
+.markdown-content h2 {
+    font-size: 1.5em;
+    margin: 0.75em 0;
+    font-weight: bold;
+}
+
+.markdown-content p {
+    margin: 1em 0;
+}
+
+.markdown-content pre {
+    background: #f4f4f4;
+    padding: 1em;
+    overflow: auto;
+    border-radius: 3px;
+}
+
+/* Add more element-specific styles as needed */

@@ -1,14 +1,13 @@
-{% extends "base.html" %}
-{% block content %}
-    <h2>Quiz: {{ quiz.question }}</h2>
-    
-    <p>Points: {{ quiz.points }}</p>
-    
-    <form method="POST">
-        <label for="answer">Your Answer:</label>
-        <input type="text" id="answer" name="answer" required>
-        <input type="submit" value="Submit Answer">
-    </form>
-    
-    <a href="{{ url_for('lessons') }}" class="back-btn">Back to Lessons</a>
+{% extends "base.html" %} {% block content %}
+<h2>Points: {{ quiz.points }}</h2>
+
+<p>Quiz: {{ quiz.question }}</p>
+
+<form method="POST">
+    <label for="answer">Your Answer:</label>
+    <input type="text" id="answer" name="answer" required />
+    <input type="submit" value="Submit Answer" />
+</form>
+
+<a href="{{ url_for('lessons') }}" class="back-btn">Back to Lessons</a>
 {% endblock %}

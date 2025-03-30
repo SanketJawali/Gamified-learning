@@ -11,10 +11,11 @@ def chapter_page(chapter_id):
         session.pop('user_id', None)
         return redirect(url_for('login'))
     # Get chapter content
-    content = get_chapter_content(chapter_id + ".md")
+    filename = f"chapter_{chapter_id}.md"
+    content = get_chapter_content(filename)
 
     # Convert markdown to html
-
+    content = markdown_to_html(content)
 
     # Render chapters template
-    return render_template('chapter.html', user=user, content=content)
+    return render_template('chapter.html', user=user, content=content, chapter_id=chapter_id)

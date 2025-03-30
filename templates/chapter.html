@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block content %}
+<h2>Chapter - {{chapter_id}}</h2>
+<div>
+    <div
+        class="markdown-content"
+        style="
+            background: white;
+            border-radius: 10px;
+            box-shadow: darkgray 5px 5px 5px;
+            max-width: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 0);
+            padding: 1rem;
+        "
+    >
+        {{content|safe}}
+    </div>
+    <a href="{{ url_for('quiz', lesson_id=chapter_id) }}" class="menu-btn"
+        >Chapter Quiz</a
+    >
+</div>
+{% endblock %}
