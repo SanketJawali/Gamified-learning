@@ -1,13 +1,39 @@
 {% extends "base.html" %} {% block content %}
-<h2>Points: {{ quiz.points }}</h2>
+<h2>Points: {{ questions.points }}</h2>
+<h1>Chapter 1 Quiz</h1>
 
-<p>Quiz: {{ quiz.question }}</p>
+<form method="POST" action="{{ url_for('quiz', lesson_id=quiz_id) }}">
+    <ul>
+        {% for question in questions %}
+        <div class="question">
+            <h3>Question {{ loop.index }}: {{ question.text }}</h3>
 
-<form method="POST">
+            <div class="options">
+                {% for option in question.options %}
+                <div>
+                    <input
+                        type="radio"
+                        id="q{{ loop.parent.loop.index }}o{{ loop.index }}"
+                        name="q{{ loop.parent.loop.index }}"
+                        value="{{ option }}"
+                    />
+                    <label for="q{{ loop.parent.loop.index }}o{{ loop.index }}">
+                        {{ option }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+
+    <button type="submit">Submit Quiz</button>
+</form>
+<!-- <form method="POST">
     <label for="answer">Your Answer:</label>
     <input type="text" id="answer" name="answer" required />
     <input type="submit" value="Submit Answer" />
-</form>
+</form> -->
 
 <a href="{{ url_for('lessons') }}" class="back-btn">Back to Lessons</a>
 {% endblock %}

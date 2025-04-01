@@ -1,0 +1,81 @@
+{
+  "time_limit_minutes": 5,
+  "points": 80,
+  "question": [
+    {
+      "id": "q1",
+      "text": "What happens if you forget to check 'Add Python to PATH' during installation?",
+      "options": [
+        "You'll need to manually navigate to Python's install directory to run it",
+        "Python won't install at all",
+        "Your IDE won't work",
+        "It automatically adds itself later"
+      ]
+    },
+    {
+      "id": "q2",
+      "text": "When writing a Python script, what extension should the file have?",
+      "options": [".txt", ".py", ".python", ".script"]
+    },
+    {
+      "id": "q3",
+      "text": "What will happen if you write this code without proper indentation?\n\nif True:\nprint('Hello')",
+      "options": [
+        "It will run normally",
+        "SyntaxError: expected an indented block",
+        "The text won't print",
+        "The program will crash your computer"
+      ]
+    },
+    {
+      "id": "q4",
+      "text": "How would you properly comment out multiple lines in Python?",
+      "options": [
+        "// Comment line 1\n// Comment line 2",
+        "/* Comment line 1\nComment line 2 */",
+        "\"\"\"Comment line 1\nComment line 2\"\"\"",
+        "# Comment line 1\n# Comment line 2"
+      ]
+    },
+    {
+      "id": "q5",
+      "text": "What's the practical difference between these two variables?\n\nName = 'Alice'\nname = 'Bob'",
+      "options": [
+        "They reference the same value",
+        "Python treats them as completely different variables",
+        "The first one is a constant",
+        "The second one will cause an error"
+      ]
+    },
+    {
+      "id": "q6",
+      "text": "If you see this error: 'python: command not found', what likely happened?",
+      "options": [
+        "You forgot to save your file",
+        "Python wasn't added to PATH",
+        "Your code has syntax errors",
+        "You need to restart your computer"
+      ]
+    },
+    {
+      "id": "q7",
+      "text": "What's the most likely output of:\n\nprint('Hello')\nprint('World')",
+      "options": [
+        "HelloWorld",
+        "Hello World",
+        "Hello\nWorld",
+        "Nothing - it's invalid syntax"
+      ]
+    },
+    {
+      "id": "q8",
+      "text": "Which of these is a real-world use case for Python mentioned in the chapter?",
+      "options": [
+        "Building operating systems",
+        "Creating device drivers",
+        "Web development with Flask/Django",
+        "Low-level hardware programming"
+      ]
+    }
+  ]
+}
