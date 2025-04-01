@@ -36,7 +36,7 @@ def get_quiz(filename):
         quiz_path = os.path.join(
             current_app.root_path,  # Flask application root directory
             'templates',
-            'quizzes',
+            'quizes',
             f'{filename}.json'  # Add .json extension
         )
 

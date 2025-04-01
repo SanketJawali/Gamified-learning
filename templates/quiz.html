@@ -1,39 +1,51 @@
 {% extends "base.html" %} {% block content %}
-<h2>Points: {{ questions.points }}</h2>
-<h1>Chapter 1 Quiz</h1>
+<h1>Chapter {{ quiz_id }} Quiz</h1>
+<h2>Points: {{ points }}</h2>
+<h2>Time Limit: {{ time_limit }} minutes</h2>
 
-<form method="POST" action="{{ url_for('quiz', lesson_id=quiz_id) }}">
-    <ul>
-        {% for question in questions %}
-        <div class="question">
-            <h3>Question {{ loop.index }}: {{ question.text }}</h3>
-
-            <div class="options">
-                {% for option in question.options %}
-                <div>
-                    <input
-                        type="radio"
-                        id="q{{ loop.parent.loop.index }}o{{ loop.index }}"
-                        name="q{{ loop.parent.loop.index }}"
-                        value="{{ option }}"
-                    />
-                    <label for="q{{ loop.parent.loop.index }}o{{ loop.index }}">
-                        {{ option }}
-                    </label>
-                </div>
-                {% endfor %}
+<div
+    style="
+        width: 50%;
+        position: absolute;
+        left: 50%;
+        border: 2px solid black;
+        border-radius: 20px;
+        transform: translate(-50%, 0);
+        padding: 1rem;
+        margin: 1rem;
+        box-shadow: darkgray 5px 5px 5px;
+    "
+>
+    <form
+        action="{{ url_for('quiz', lesson_id=quiz_id) }}"
+        method="post"
+        style="all: initial"
+    >
+        {% if questions %}
+        <!-- Check if questions exist -->
+        {% for q in questions %}
+        <div>
+            <h3>Question {{ loop.index }}: {{ q.text }}</h3>
+            {% for option in q.options %}
+            <div>
+                <input
+                    type="radio"
+                    name="{{ q.id }}"
+                    value="{{ option }}"
+                    id="{{ q.id }}_{{ loop.index }}"
+                    required
+                />
+                <label for="{{ q.id }}_{{ loop.index }}">{{ option }}</label>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </ul>
+        {% endfor %} {% else %}
+        <p>No questions found in the quiz data.</p>
+        {% endif %}
 
-    <button type="submit">Submit Quiz</button>
-</form>
-<!-- <form method="POST">
-    <label for="answer">Your Answer:</label>
-    <input type="text" id="answer" name="answer" required />
-    <input type="submit" value="Submit Answer" />
-</form> -->
-
-<a href="{{ url_for('lessons') }}" class="back-btn">Back to Lessons</a>
+        <button type="submit">Submit Quiz</button>
+    </form>
+    <br />
+    <a href="{{ url_for('lessons') }}" class="back-btn">Back to Lessons</a>
+</div>
 {% endblock %}

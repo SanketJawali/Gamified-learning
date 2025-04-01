@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, abort
 import re
 from models.models import User, Course
 from models.database import db
@@ -44,7 +44,7 @@ from routes.helpers import get_quiz
 #         return redirect(url_for('lessons'))
 #     return render_template('quiz.html', user=user, quiz=quizzes[user.level][lesson_id])
 
-def quiz_page(lesson_id = None):
+def quiz_page(lesson_id):
     if 'user_id' not in session:
             return redirect(url_for('login'))
     user = db.session.get(User, session['user_id'])
@@ -54,6 +54,18 @@ def quiz_page(lesson_id = None):
     if not user.level:
         return redirect(url_for('select_level'))
 
-    questions = get_quiz("quiz_1")
+    filename = f"quiz_{lesson_id}"
+    quiz_data = get_quiz(filename)
 
-    return render_template('quiz.html', user=user, questions=questions, quiz_id=lesson_id)
+    if not quiz_data:
+            abort(404, description="Quiz not found")
+
+    # Pass the specific parts of quiz_data separately
+    return render_template(
+        'quiz.html',
+        user=user,
+        quiz_id=lesson_id,
+        points=quiz_data.get('points', 0),
+        time_limit=quiz_data.get('time_limit_minutes', 0),
+        questions=quiz_data.get('question', [])  # Pass just the questions array
+    )
