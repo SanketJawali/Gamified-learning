@@ -2,47 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import re
 from models.models import User, Course
 from models.database import db
-from routes.helpers import get_quiz
-
-# def quiz_page(lesson_id=None):
-#     if 'user_id' not in session:
-#         return redirect(url_for('login'))
-#     user = db.session.get(User, session['user_id'])
-#     if user is None:
-#         session.pop('user_id', None)
-#         return redirect(url_for('login'))
-#     if not user.level:
-#         return redirect(url_for('select_level'))
-
-#     quizzes = {
-#         'Beginner': {
-#             1: {'question': 'What is Python?', 'answer': 'programming language', 'points': 10},
-#             2: {'question': 'How do you assign a value?', 'answer': '=', 'points': 15},
-#             3: {'question': 'Which loop repeats a block?', 'answer': 'for', 'points': 20}
-#         },
-#         'Intermediate': {
-#             1: {'question': 'What keyword defines a function?', 'answer': 'def', 'points': 20},
-#             2: {'question': 'How do you create a list?', 'answer': '[]', 'points': 25},
-#             3: {'question': 'What checks a condition?', 'answer': 'if', 'points': 30}
-#         },
-#         'Advanced': {
-#             1: {'question': 'What is a class?', 'answer': 'blueprint', 'points': 30},
-#             2: {'question': 'What modifies a function?', 'answer': 'decorator', 'points': 35},
-#             3: {'question': 'What yields values one at a time?', 'answer': 'generator', 'points': 40}
-#         }
-#     }
-#     if request.method == 'POST':
-#         answer = request.form['answer'].lower()
-#         if answer == quizzes[user.level][lesson_id]['answer']:
-#             user.points += quizzes[user.level][lesson_id]['points']
-#             completed = user.completed_lessons + f",{lesson_id}" if user.completed_lessons else str(lesson_id)
-#             user.completed_lessons = completed
-#             db.session.commit()
-#             flash(f'Correct! Earned {quizzes[user.level][lesson_id]["points"]} points!')
-#         else:
-#             flash('Wrong answer! Try again.')
-#         return redirect(url_for('lessons'))
-#     return render_template('quiz.html', user=user, quiz=quizzes[user.level][lesson_id])
+from routes.helpers import get_quiz, get_quiz_answers
 
 def quiz_page(lesson_id):
     if 'user_id' not in session:
@@ -53,6 +13,73 @@ def quiz_page(lesson_id):
         return redirect(url_for('login'))
     if not user.level:
         return redirect(url_for('select_level'))
+
+    if request.method == 'POST':
+        # Load the quiz answers
+        answer_filename = f"answer_{lesson_id}"
+        answer_data = get_quiz_answers(answer_filename)
+        if not answer_data:
+            abort(404, description="Answer key not found")
+
+        # Calculate score
+        correct_answers = 0
+        answer_key = answer_data.get('answers', {})
+        total_questions = len(answer_data['answers'])
+        print(total_questions)
+
+        # Check each submitted answer
+        for question_id, correct_index in answer_key.items():
+            user_answer = request.form.get(question_id, '').strip()
+
+            print(f"\nChecking question {question_id}:")
+            print(f"- Correct index: {correct_index} (type: {type(correct_index)})")
+            print(f"- User answer: '{user_answer}' (type: {type(user_answer)})")
+
+            try:
+                user_answer_int = int(user_answer)
+                correct_index_int = int(correct_index)
+
+                if user_answer_int == correct_index_int:
+                    print("✅ CORRECT MATCH")
+                    correct_answers += 1
+                else:
+                    print("❌ WRONG ANSWER")
+            except (ValueError, TypeError) as e:
+                print(f"⚠️ INVALID ANSWER: {e}")
+                continue
+
+        print(f"\n=== FINAL COUNT ===")
+        print(f"Correct answers: {correct_answers}/{total_questions}")
+
+        # Calculate results
+        score = (correct_answers / total_questions) * 100
+        xp_earned = correct_answers * answer_data['xp_per_question']
+
+        # flash the result
+        flash(f'Quiz submitted. You earned {xp_earned} points')
+
+        # Update user's progress
+        # try:
+        #     user.xp += xp_earned
+
+        #     # Mark lesson as completed if passing score (e.g., 70%)
+        #     if score >= 70:
+        #         completion = Completion(
+        #             user_id=user.id,
+        #             lesson_id=lesson_id,
+        #             completed_at=datetime.utcnow(),
+        #             score=score
+        #         )
+        #         db.session.add(completion)
+
+        #     db.session.commit()
+        # except Exception as e:
+        #     db.session.rollback()
+        #     current_app.logger.error(f"Error updating user progress: {e}")
+        #     flash("Error saving your results", "error")
+
+        # Render results template
+        # return render_template()
 
     filename = f"quiz_{lesson_id}"
     quiz_data = get_quiz(filename)

@@ -57,3 +57,23 @@ def get_quiz(filename):
     except Exception as e:
         current_app.logger.error(f"Error loading quiz: {e}")
         return None
+
+def get_quiz_answers(filename):
+    try:
+        answer_path = os.path.join(
+            current_app.root_path,
+            'templates',
+            'quizes',
+            f'{filename}.json'
+        )
+
+        if not os.path.exists(answer_path):
+            current_app.logger.error(f"Answer file not found: {answer_path}")
+            return None
+
+        with open(answer_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+
+    except Exception as e:
+        current_app.logger.error(f"Error loading answers: {e}")
+        return None
