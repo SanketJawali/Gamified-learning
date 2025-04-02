@@ -5,7 +5,7 @@ from .course import courses_page, select_course_page
 from .lesson import lessons_page
 from .chapter import chapter_page
 from .quiz import quiz_page
-from .user import profile_page, select_level_page
+from .user import profile_page
 
 
 def init_admin(app):
@@ -34,4 +34,3 @@ def init_quiz(app):
 
 def init_user(app):
     app.add_url_rule('/profile', 'profile', profile_page)
-    app.add_url_rule('/select_level', 'select_level', select_level_page,methods=['GET', 'POST'])

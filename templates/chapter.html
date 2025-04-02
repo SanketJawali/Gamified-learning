@@ -16,7 +16,7 @@
     >
         {{content| replace('\n', '<br />') | safe}}
     </div>
-    <a href="{{ url_for('quiz', lesson_id=chapter_id) }}" class="menu-btn"
+    <a href="{{ url_for('quiz', quiz_id=chapter_id) }}" class="menu-btn"
         >Chapter Quiz</a
     >
 </div>

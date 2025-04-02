@@ -3,7 +3,7 @@
 <ul>
     {% for lesson in lessons %}
     <li>
-        {{ loop.index }}. {{ lesson.title }} ({{ lesson.points }} points)
+        {{ loop.index }}. {{ lesson.title }}
         <a href="{{ url_for('chapter', chapter_id=lesson.id) }}"
             >Go to chapter</a
         >

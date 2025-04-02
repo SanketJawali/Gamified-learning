@@ -28,5 +28,5 @@ def select_course_page():
     if course:
         user.course = course.name
         db.session.commit()
-        return jsonify({'success': True, 'redirect': url_for('select_level')})
+        return jsonify({'success': True, 'redirect': url_for('lessons')})
     return jsonify({'error': 'Invalid course'}), 400

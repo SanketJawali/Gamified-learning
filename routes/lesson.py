@@ -11,21 +11,20 @@ def lessons_page():
         return redirect(url_for('login'))
     if not user.level:
         return redirect(url_for('select_level'))
-    lessons = {
-        'Beginner': [
-            {'id': 1, 'title': 'Python Basics', 'points': 10},
-            {'id': 2, 'title': 'Simple Variables', 'points': 15},
-            {'id': 3, 'title': 'Basic Loops', 'points': 20}
-        ],
-        'Intermediate': [
-            {'id': 1, 'title': 'Functions', 'points': 20},
-            {'id': 2, 'title': 'Lists and Dictionaries', 'points': 25},
-            {'id': 3, 'title': 'Conditionals', 'points': 30}
-        ],
-        'Advanced': [
-            {'id': 1, 'title': 'OOP Concepts', 'points': 30},
-            {'id': 2, 'title': 'Decorators', 'points': 35},
-            {'id': 3, 'title': 'Generators', 'points': 40}
-        ]
-    }
-    return render_template('lessons.html', user=user, lessons=lessons[user.level])
+    lessons = [
+        {'id': 1, 'title': 'Introduction to Python'},
+        {'id': 2, 'title': 'Variables and Data Types'},
+        {'id': 3, 'title': 'Operators & Expressions'},
+        {'id': 4, 'title': 'Conditional Statements'},
+        {'id': 5, 'title': 'Loops in Python'},
+        {'id': 6, 'title': 'Functions'},
+        {'id': 7, 'title': 'Lists, Tuples, and Dictionaries'},
+        {'id': 8, 'title': 'File Handling in Python'},
+        {'id': 9, 'title': 'Exception Handling'},
+        {'id': 10, 'title': 'Python Classes and Objects'},
+        {'id': 11, 'title': 'Python Iterators'},
+        {'id': 12, 'title': 'Inheritance'},
+        {'id': 13, 'title': 'Polymorphism'},
+        {'id': 14, 'title': 'Encapsulation'}
+    ]
+    return render_template('lessons.html', user=user, lessons=lessons)

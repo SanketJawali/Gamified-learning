@@ -31,13 +31,11 @@ def create_app():
 
     app.add_url_rule('/chapter/<int:chapter_id>', 'chapter', chapter.chapter_page)
 
-    app.add_url_rule('/quiz/<int:lesson_id>', 'quiz', quiz.quiz_page, methods=['GET', 'POST'])
+    app.add_url_rule('/quiz/<int:quiz_id>', 'quiz', quiz.quiz_page, methods=['GET', 'POST'])
 
     app.add_url_rule('/profile', 'profile', user.profile_page)
 
     app.add_url_rule('/contact_support', 'contact_support', user.contact_support_page)
-
-    app.add_url_rule('/select_level', 'select_level', user.select_level_page,methods=['GET', 'POST'])
 
     app.add_url_rule('/logout', 'logout', auth_routes.logout_page)
 
