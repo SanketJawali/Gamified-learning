@@ -1,335 +1,36 @@
-/* Reset default styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@import "tailwindcss";
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f7fa;
-    color: #333;
-    line-height: 1.6;
-}
-
-/* Navigation Bar */
-nav {
-    background-color: #4a90e2;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-nav span {
-    color: white;
-    font-weight: bold;
-    margin-right: 20px;
-}
-
-nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 20px;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-nav a:hover {
-    color: #ffdd57;
-}
-
-/* Flash Messages */
-.flash {
-    padding: 15px;
-    margin: 20px auto;
-    width: 80%;
-    max-width: 600px;
-    background-color: #ffebee;
-    border: 1px solid red;
-    border-radius: 5px;
-    text-align: center;
-}
-.flash1 {
-    padding: 15px;
-    margin: 20px auto;
-    width: 80%;
-    max-width: 600px;
-    background-color: #7fb06a;
-    border: 1px solid Green;
-    border-radius: 5px;
-    text-align: center;
-}
-
-/* Headings */
-h2 {
-    color: #4a90e2;
-    text-align: center;
-    margin: 20px 0;
-}
-
-/* Forms (General) */
-form {
-    width: 80%;
-    max-width: 400px;
-    margin: 20px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="tel"],
-select {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-/* Specific Styling for Email and Mobile */
-input[type="email"] {
-    border-color: #4a90e2; /* Blue border for email */
-    background-color: #f0f8ff; /* Light blue background */
-}
-
-input[type="tel"] {
-    border-color: #28a745; /* Green border for mobile */
-    background-color: #f4fff4; /* Light green background */
-}
-
-input[type="submit"] {
-    width: 100%;
-    padding: 12px;
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-input[type="submit"]:hover {
-    background-color: #357abd;
-}
-
-/* Error Styling */
-.error {
-    color: #ef5350; /* Red for errors */
-    font-size: 14px;
-    margin-top: -8px;
-    margin-bottom: 10px;
-    display: block;
-}
-
-/* Links */
-a {
-    color: #4a90e2;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Lessons List */
-ul {
-    width: 80%;
-    max-width: 600px;
-    margin: 20px auto;
-    list-style: none;
-}
-
-ul li {
-    background-color: white;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Profile Page */
-p {
-    width: 80%;
-    max-width: 400px;
-    margin: 10px auto;
-    padding: 10px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-    nav {
-        flex-direction: column;
-        text-align: center;
-    }
-    nav span, nav a {
-        margin: 10px 0;
-    }
-    form, ul, p {
-        width: 90%;
-    }
-}
-/* Menu Container */
-.menu-container {
-    position: relative;
-    display: inline-block;
-    margin: 20px auto;
-    width: 80%;
-    max-width: 400px;
-    text-align: right;
-}
-
-/* Menu Button */
-.menu-btn {
-    background-color: #4a90e2;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-.menu-btn:hover {
-    background-color: #357abd;
-}
-
-/* Dropdown Content */
-.menu-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: white;
-    min-width: 160px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    z-index: 1;
-}
-
-.menu-content a {
-    color: #333;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    transition: background-color 0.3s;
-}
-
-.menu-content a:hover {
-    background-color: #f4f7fa;
-}
-
-/* Show dropdown on button hover */
-.menu-container:hover .menu-content {
-    display: block;
-}/* Back Button */
-.back-btn {
-    display: inline-block;
-    padding: 12px 20px;
-    background-color: #4a90e2;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s;
-    margin: 20px auto;
-    text-align: center;
-    width: 80%;
-    max-width: 400px;
-}
-
-.back-btn:hover {
-    background-color: #357abd;
-}
-/* Course Card */
-.course-card {
-    width: 80%;
-    max-width: 300px;
-    margin: 20px auto;
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.course-card:hover {
-    transform: scale(1.05); /* Slight zoom on hover */
-}
-
-.course-image {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 10px;
-}
-
-.course-name {
-    font-size: 18px;
-    color: #4a90e2;
-    margin: 0;
-}
-
-/* New styles for dropdowns */
-.dropdown-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px; /* Matches spacing of other form elements */
-}
-
-.dropdown-item {
-    display: flex;
-    flex-direction: column;
-    width: 48%; /* Slightly less than half to account for spacing */
-}
-
-.dropdown-item label {
-    margin-bottom: 5px; /* Consistent with other labels */
-}
-
-.dropdown-item select {
-    width: 100%;
-    padding: 8px; /* Matches typical input padding */
-    font-size: 16px; /* Matches typical input font size */
-    border: 1px solid #ccc; /* Matches typical input border */
-    border-radius: 4px; /* Matches typical input border-radius */
-    box-sizing: border-box; /* Ensures padding doesn’t increase width */
-}
-
-/* Ensure form height consistency */
-form {
-    max-width: 400px; /* Adjust as needed to match your design */
-    margin: 0 auto;
-}
-
-input, select {
-    height: 36px; /* Consistent height for inputs and dropdowns */
-}
-select {
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    height: 36px;
-    box-sizing: border-box;
-}
-.flash {
-    color: red;
-    margin-bottom: 10px;
+@plugin "daisyui/theme" {
+    name: "sunset";
+    default: false;
+    prefersdark: false;
+    color-scheme: "dark";
+    --color-base-100: oklch(13% 0.028 261.692);
+    --color-base-200: oklch(21% 0.034 264.665);
+    --color-base-300: oklch(27% 0.033 256.848);
+    --color-base-content: oklch(96% 0.003 264.542);
+    --color-primary: oklch(85% 0.199 91.936);
+    --color-primary-content: oklch(28% 0.066 53.813);
+    --color-secondary: oklch(70% 0.165 254.624);
+    --color-secondary-content: oklch(28% 0.091 267.935);
+    --color-accent: oklch(0% 0 0);
+    --color-accent-content: oklch(100% 0 0);
+    --color-neutral: oklch(13% 0.028 261.692);
+    --color-neutral-content: oklch(98% 0.002 247.839);
+    --color-info: oklch(74% 0.16 232.661);
+    --color-info-content: oklch(29% 0.066 243.157);
+    --color-success: oklch(84% 0.238 128.85);
+    --color-success-content: oklch(27% 0.072 132.109);
+    --color-warning: oklch(82% 0.189 84.429);
+    --color-warning-content: oklch(27% 0.077 45.635);
+    --color-error: oklch(70% 0.191 22.216);
+    --color-error-content: oklch(25% 0.092 26.042);
+    --radius-selector: 2rem;
+    --radius-field: 0rem;
+    --radius-box: 1rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 0;
+    --noise: 0;
 }

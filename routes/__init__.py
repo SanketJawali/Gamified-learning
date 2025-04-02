@@ -1,4 +1,4 @@
-from .routes import home_page
+from .home import home_page
 from .admin import admin_courses_page
 from .auth_routes import register_page, login_page, logout_page
 from .course import courses_page, select_course_page

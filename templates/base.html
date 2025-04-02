@@ -1,52 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <title>Learning Platform</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-<body>
-    
-    
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                {% if message =='Invalid credentials!' %}
-                    <div class="flash">
-                    {{ message }}</div>
-                    
-                {%else%}
-                    <div class="flash1">
-                    {{ message }}</div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
-    <script>
-        function selectCourse(courseName) {
-            fetch('/select_course', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+    <head>
+        <title>Learning Platform</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://cdn.jsdelivr.net/npm/daisyui@5"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <link
+            href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_forward"
+        />
+        <script>
+            tailwind.config = {
+                daisyui: {
+                    themes: [
+                        {
+                            mytheme: {
+                                primary: "#1d4ed8",
+                                secondary: "#7e22ce",
+                                accent: "#f59e0b",
+                                neutral: "#1f2937",
+                                "base-100": "#f3f4f6",
+                                info: "#3b82f6",
+                                success: "#10b981",
+                                warning: "#f59e0b",
+                                error: "#ef4444",
+                            },
+                        },
+                    ],
                 },
-                body: JSON.stringify({ course: courseName }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = data.redirect; // Redirect to lessons
-                } else {
-                    alert('Error selecting course: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to select course');
-            });
-        }
-    </script>
-</body>
+            };
+        </script>
+    </head>
+    <body>
+        {% with messages = get_flashed_messages() %} {% if messages %} {% for
+        message in messages %} {% if message =='Invalid credentials!' %}
+        <div class="flash">{{ message }}</div>
+
+        {%else%}
+        <div class="flash1">{{ message }}</div>
+        {% endif %} {% endfor %} {% endif %} {% endwith %} {% block content %}{%
+        endblock %}
+        <script>
+            function selectCourse(courseName) {
+                fetch("/select_course", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ course: courseName }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            window.location.href = data.redirect; // Redirect to lessons
+                        } else {
+                            alert(
+                                "Error selecting course: " +
+                                    (data.error || "Unknown error"),
+                            );
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Failed to select course");
+                    });
+            }
+        </script>
+    </body>
 </html>

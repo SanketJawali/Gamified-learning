@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block content %}
+<div
+    class="hero min-h-screen"
+    style="
+        background-image: url(https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+    "
+>
+    <div class="hero-overlay bg-black/50 backdrop-blur-sm"></div>
+    <div class="hero-content text-neutral-content text-center">
+        <div class="max-w-md">
+            <h1 class="mb-5 text-5xl font-bold">
+                Best way of learing to Code!
+            </h1>
+            <p class="mb-5">
+                Level up your coding skills like a game—earn XP, unlock
+                achievements, and climb the ranks while mastering real code!
+            </p>
+            <a class="btn btn-primary" href="{{ url_for('login') }}"
+                >Get Started
+                <span class="material-symbols-outlined"> arrow_forward </span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -15,7 +15,7 @@ def create_app():
     init_db(app)
 
     # Routes
-    app.add_url_rule('/', 'home', routes.home_page)
+    app.add_url_rule('/', 'home', home.home_page)
 
     app.add_url_rule('/register', 'register', auth_routes.register_page, methods=['GET', 'POST'])
 
