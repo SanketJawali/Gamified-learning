@@ -21,10 +21,8 @@
         method="post"
         style="all: initial"
     >
-        {% if questions %}
-        <!-- Check if questions exist -->
         {% for q in questions %}
-        <div>
+        <div style="padding: 1rem">
             <h3>Question {{ loop.index }}: {{ q.text }}</h3>
             {% for option in q.options %}
             <div>
@@ -38,10 +36,10 @@
                 <label for="{{ q.id }}_{{ loop.index }}">{{ option }}</label>
             </div>
             {% endfor %}
+            <br />
+            <hr />
         </div>
-        {% endfor %} {% else %}
-        <p>No questions found in the quiz data.</p>
-        {% endif %}
+        {% endfor %}
 
         <button type="submit">Submit Quiz</button>
     </form>
