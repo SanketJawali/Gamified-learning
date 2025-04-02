@@ -21,39 +21,44 @@ def quiz_page(lesson_id):
         if not answer_data:
             abort(404, description="Answer key not found")
 
+        # Check if lesson was already completed
+        completed_lessons = user.completed_lessons.split(',') if user.completed_lessons else []
+        is_lesson_completed = str(lesson_id) in completed_lessons
+
         # Calculate score
         correct_answers = 0
         answer_key = answer_data.get('answers', {})
-        total_questions = len(answer_data['answers'])
+        total_questions = len(answer_key)
 
-        # Check each submitted answer
         for question_id, correct_index in answer_key.items():
             user_answer = request.form.get(question_id, '').strip()
-
-            user_answer_int = int(user_answer)
-            correct_index_int = int(correct_index)
-            correct_answers += 1
+            try:
+                if int(user_answer) == int(correct_index):
+                    correct_answers += 1
+            except (ValueError, TypeError):
+                continue
 
         # Calculate results
-        score = (correct_answers / total_questions) * 100
-        xp_earned = correct_answers * answer_data['xp_per_question']
+        score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+        xp_earned = correct_answers * answer_data['xp_per_question'] if not is_lesson_completed else 0
 
-        # Update user's points in database
+        # Update user's progress
         try:
-            user.points += xp_earned
-
-            # Update completed lessons if passing score (e.g., 70%)
-            if score >= 70:
-                completed_lessons = user.completed_lessons.split(',') if user.completed_lessons else []
-                if str(lesson_id) not in completed_lessons:
-                    completed_lessons.append(str(lesson_id))
-                    user.completed_lessons = ','.join(completed_lessons)
+            if not is_lesson_completed and score >= 70:
+                # First time passing - award points and mark completed
+                user.points += xp_earned
+                completed_lessons.append(str(lesson_id))
+                user.completed_lessons = ','.join(completed_lessons)
+                flash(f'Congratulations! You earned {xp_earned} points for completing this lesson!', 'success')
+            elif is_lesson_completed:
+                flash('You have already completed this lesson. No additional points awarded.', 'info')
+            else:
+                flash(f'You scored {score:.1f}%. Try again to pass and earn points!', 'warning')
 
             db.session.commit()
-            flash(f'Quiz submitted successfully! You earned {xp_earned} points. Total points: {user.points}', 'success')
         except Exception as e:
             db.session.rollback()
-            # current_app.logger.error(f"Failed to update user points: {e}")
+            # current_app.logger.error(f"Failed to update user progress: {e}")
             flash('Error saving your results. Please try again.', 'error')
 
     # Handle Get request

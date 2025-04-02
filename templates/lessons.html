@@ -3,10 +3,10 @@
 <ul>
     {% for lesson in lessons %}
     <li>
-        {{ lesson.title }} ({{ lesson.points }} points) {% if lesson.id|string
-        in user.completed_lessons.split(',') %} - Completed {% else %}
-        <a href="{{ url_for('chapter', chapter_id=lesson.id) }}">Chapter</a>
-        {% endif %}
+        {{ loop.index }}. {{ lesson.title }} ({{ lesson.points }} points)
+        <a href="{{ url_for('chapter', chapter_id=lesson.id) }}"
+            >Go to chapter</a
+        >
     </li>
     {% endfor %}
 </ul>
