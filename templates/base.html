@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Learning Platform</title>
+        <title>Gamified Learning</title>
 
         <script src="https://cdn.tailwindcss.com"></script>
         <link
@@ -23,7 +23,10 @@
     <body>
         <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
             <div class="flex-1">
-                <a class="text-xl" href="/">Welcome</a>
+                <div class="flex items-center gap-2">
+                    <img src="/static/logo.png" alt="logo" class="size-15">
+                    <a class="text-xl" href="/">Gamified Learning</a>
+                </div>
             </div>
             {% if 'user_id' in session %}
                 <div class="flex gap-2">

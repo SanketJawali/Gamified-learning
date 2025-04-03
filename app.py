@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from models import init_db, db
 from routes import *
@@ -38,6 +38,11 @@ def create_app():
     app.add_url_rule('/contact_support', 'contact_support', user.contact_support_page)
 
     app.add_url_rule('/logout', 'logout', auth_routes.logout_page)
+
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(os.path.join(app.root_path, 'static'),
+        'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
     return app
 
