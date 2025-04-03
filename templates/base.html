@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
     <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Gamified Learning</title>
 
         <script src="https://cdn.tailwindcss.com"></script>
@@ -17,20 +19,31 @@
         />
         <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_forward"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_forward"
+        />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back"
         />
     </head>
     <body>
-        <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
-            <div class="flex-1">
-                <div class="flex items-center gap-2">
-                    <img src="/static/logo.png" alt="logo" class="size-15">
-                    <a class="text-xl" href="/">Gamified Learning</a>
+        <div class="min-h-screen flex flex-col">
+            <div class="navbar bg-base-100 shadow-sm sticky top-0 z-[100]">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2">
+                        <img
+                            src="/static/logo.png"
+                            alt="logo"
+                            class="size-15"
+                        />
+                        <a class="text-xl" href="/">Gamified Learning</a>
+                    </div>
                 </div>
-            </div>
-            {% if 'user_id' in session %}
-                <div class="flex gap-2">
-                    <p class="pt-2" style="height:min-content">Level: {{ session.get('user_level', 1) }}</p>
+                {% if 'user_id' in session %}
+                <div class="flex gap-2 pr-5">
+                    <p class="pt-2" style="height: min-content">
+                        Level: {{ session.get('user_level', 1) }}
+                    </p>
                     <progress
                         class="progress progress-accent w-56 h-3 mt-4"
                         value="{{ session.get('user_points', 0) }}"
@@ -55,56 +68,38 @@
                             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
                         >
                             <li>
-                                <a class="justify-between">
-                                    <a href="{{ url_for('profile') }}">
+                                <a
+                                    href="{{ url_for('profile') }}"
+                                    class="text-lg"
+                                >
                                     Profile
-                                    <!-- <span class="badge">New</span> -->
                                 </a>
-                                <a href="{{ url_for('courses') }}">Courses</a>
-                                <a href="{{ url_for('logout') }}">Logout</a>
+                                <a
+                                    href="{{ url_for('courses') }}"
+                                    class="text-lg"
+                                    >Courses</a
+                                >
+                                <a
+                                    href="{{ url_for('logout') }}"
+                                    class="text-lg"
+                                    >Logout</a
+                                >
                             </li>
                             {% endif %}
                         </ul>
                     </div>
                 </div>
-            {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-            {% endif %}
+                {% else %}
+                <a href="{{ url_for('login') }}" class="pr-5">Login</a>
+                {% endif %}
+            </div>
 
+            <main class="flex-grow">{% block content %}{% endblock %}</main>
+
+            <!-- <div class="divider"></div>
+            <footer class="bottom-0">
+                <p>&copy; 2025 Gamified Learning</p>
+            </footer> -->
         </div>
-        {% with messages = get_flashed_messages() %} {% if messages %} {% for
-        message in messages %} {% if message =='Invalid credentials!' %}
-        <div class="flash">{{ message }}</div>
-
-        {%else%}
-        <div class="flash1">{{ message }}</div>
-        {% endif %} {% endfor %} {% endif %} {% endwith %} {% block content %}{%
-        endblock %}
-        <script>
-            function selectCourse(courseName) {
-                fetch("/select_course", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ course: courseName }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            window.location.href = data.redirect; // Redirect to lessons
-                        } else {
-                            alert(
-                                "Error selecting course: " +
-                                    (data.error || "Unknown error"),
-                            );
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        alert("Failed to select course");
-                    });
-            }
-        </script>
     </body>
 </html>

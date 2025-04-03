@@ -1,64 +1,92 @@
-{% extends "base.html" %} {% block content %}
-<h1>Chapter {{ quiz_id }} Quiz</h1>
-<h2>Points: {{ points }}</h2>
-<h2>Time Limit: {{ time_limit }} minutes</h2>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-    {% for category,message in messages %}
-            <div role="alert" class="alert alert-{{ category }} max-w-md mx-auto z-20 mt-5 flex ">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{{ message }}</span>
-            </div>
-    
-    {% endfor %}
-{% endif %}
-{% endwith %}
-
+{% extends "base.html" %} {% block content %} {% with messages =
+get_flashed_messages(with_categories=true) %} {% if messages %} {% for
+category,message in messages %}
 <div
-    style="
-        width: 50%;
-        position: absolute;
-        left: 50%;
-        border: 2px solid black;
-        border-radius: 20px;
-        transform: translate(-50%, 0);
-        padding: 1rem;
-        margin: 1rem;
-        box-shadow: darkgray 5px 5px 5px;
-    "
+    role="alert"
+    class="alert alert-{{ category }} max-w-md mx-auto z-20 mt-5 flex "
 >
-    <form
-        action="{{ url_for('quiz', quiz_id=quiz_id) }}"
-        method="post"
-        style="all: initial"
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 shrink-0 stroke-current"
+        fill="none"
+        viewBox="0 0 24 24"
     >
-
-        {% for q in questions %}
-        <div style="padding: 1rem">
-            <h3>Question {{ loop.index }}: {{ q.text }}</h3>
-            {% for option in q.options %}
-            <div>
-                <input
-                    type="radio"
-                    name="{{ q.id }}"
-                    value="{{ loop.index0 }}"
-                    id="{{ q.id }}_{{ loop.index }}"
-                    required
-                />
-                <label for="{{ q.id }}_{{ loop.index }}">{{ option }}</label>
-            </div>
-            {% endfor %}
-            <br />
-            <hr />
-        </div>
-        {% endfor %}
-
-        <button type="submit">Submit Quiz</button>
-    </form>
-    <br />
-    <a href="{{ url_for('lessons') }}" class="back-btn">Back to Lessons</a>
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+    </svg>
+    <span>{{ message }}</span>
 </div>
+
+{% endfor %} {% endif %} {% endwith %}
+<div
+    class="flex items-center justify-center gap-2 w-60 m-4 btn btn-soft btn-primary"
+>
+    <span class="material-symbols-outlined"> arrow_back </span>
+    <a href="{{ url_for('lessons') }}">Back to Lessons</a>
+</div>
+<div
+    class="flex flex-col min-h-[200px] p-3"
+    style="position: absolute; left: 50%; transform: translate(-50%, 0)"
+>
+    <div>
+        <h2 class="card-title text-2xl">Quiz: {{ quiz_id }}</h2>
+        <form action="{{ url_for('quiz', quiz_id=quiz_id) }}" method="post">
+            <div class="p-4">
+                <ul class="space-y-6">
+                    {% for q in questions %}
+                    <li>
+                        <div class="card bg-base-100 shadow-lg">
+                            <div class="card-body">
+                                <span class="card-title text-lg">
+                                    Question {{ loop.index }}: {{ q.text |
+                                    replace('\n', '<br />')}}
+                                </span>
+                                <hr class="my-2" />
+                                <div class="space-y-2">
+                                    {% for option in q.options %}
+                                    <div class="flex items-center gap-2">
+                                        <input
+                                            type="radio"
+                                            name="{{ q.id }}"
+                                            value="{{ loop.index0 }}"
+                                            id="{{ q.id }}_{{ loop.index }}"
+                                            required
+                                            class="radio radio-primary"
+                                        />
+                                        <label
+                                            for="{{ q.id }}_{{ loop.index }}"
+                                            class="text-base cursor-pointer"
+                                        >
+                                            {{ option | replace('\n', '<br />')
+                                            }}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% if not loop.last %}
+                    <hr class="my-4" />
+                    {% endif %} {% endfor %}
+                </ul>
+
+                <!-- Properly placed submit button -->
+                <div class="flex justify-center mt-8 mb-4">
+                    <button
+                        type="submit"
+                        class="btn bg-indigo-500 hover:bg-indigo-700 w-full max-w-xs"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}

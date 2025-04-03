@@ -59,11 +59,11 @@
     },
     {
       "id": "q7",
-      "text": "What's the most likely output of:\n\nprint('Hello')\nprint('World')",
+      "text": "What's the most likely output of: \n\nprint('Hello') \nprint('World')",
       "options": [
         "HelloWorld",
         "Hello World",
-        "Hello\nWorld",
+        "Hello \n World",
         "Nothing - it's invalid syntax"
       ]
     },
