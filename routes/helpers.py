@@ -1,11 +1,33 @@
 import markdown, os
+from markupsafe import Markup
 import json
 from flask import current_app
 
 def markdown_to_html(markdown_text):
-    """Convert Markdown text to HTML"""
-    html = markdown.markdown(markdown_text)
-    return html
+    extensions = [
+        'fenced_code',       # GitHub-style code blocks
+        'codehilite',       # Syntax highlighting
+        'tables',           # Tables support
+        'toc',              # Table of contents
+        'nl2br',            # Convert newlines to <br>
+        'md_in_html'        # Allow Markdown within HTML blocks
+    ]
+
+    extension_configs = {
+        'codehilite': {
+            'linenums': True,       # Add line numbers
+            'use_pygments': True,   # Use Pygments for highlighting
+            'css_class': 'codehilite'  # CSS class for styling
+        }
+    }
+
+    html = markdown.markdown(
+        markdown_text,
+        extensions=extensions,
+        extension_configs=extension_configs,
+        output_format='html5'
+    )
+    return Markup(html)
 
 def get_chapter_content(filename):
     # Define the base directory

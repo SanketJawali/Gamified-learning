@@ -1,9 +1,20 @@
-{% extends "base.html" %}{% block content %}
-<div
-    class="hero min-h-screen"
-    style="
-        background-image: url(https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);"
->
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-[url(https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);] bg-cover bg-center bg-fixed h-screen w-full">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category,message in messages %}
+            <div role="alert" class="alert alert-{{ category }} max-w-md mx-auto ">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{ message }}</span>
+            </div>
+    
+    {% endfor %}
+{% endif %}
+{% endwith %}
     <div class="min-h-screen w-full bg-black/50 backdrop-blur-sm">
         <div class="min-h-screen flex items-center justify-center">
             <div class="card w-full max-w-md bg-white shadow-lg rounded-lg p-8">
@@ -42,7 +53,7 @@
                     <!-- Year -->
                     <div>
                         <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
-                        <select id="year" name="year" class="select select-bordered w-full mt-1 border-solid border-2 pl-2">
+                        <select id="year" name="year" class="select select-bordered w-full mt-1 border-solid border-2 pl-2 pl-2">
                             <option value="" {% if not request.form.year %}selected{% endif %}>Select Year</option>
                             <option value="1st Year" {% if request.form.year == '1st Year' %}selected{% endif %}>1st Year</option>
                             <option value="2nd Year" {% if request.form.year == '2nd Year' %}selected{% endif %}>2nd Year</option>

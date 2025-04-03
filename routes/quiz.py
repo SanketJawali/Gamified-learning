@@ -44,7 +44,7 @@ def quiz_page(quiz_id):
 
         # Update user's progress
         try:
-            if not is_lesson_completed and score >= 70:
+            if not is_lesson_completed and score >= 40:
                 # First time passing - award points and mark completed
                 user.points += xp_earned
                 completed_lessons.append(str(quiz_id))

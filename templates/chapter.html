@@ -1,23 +1,153 @@
 {% extends "base.html" %} {% block content %}
-<h2>Chapter - {{chapter_id}}</h2>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Apply syntax highlighting to all code blocks
+        document.querySelectorAll(".codehilite code").forEach(function (block) {
+            // Remove any existing highlight.js classes
+            block.className = "";
+            // Apply highlighting
+            hljs.highlightElement(block);
+        });
+    });
+</script>
+<style>
+    /* Base styling for code blocks */
+    .codehilite {
+        background: #f6f8fa;
+        border-radius: 6px;
+        padding: 16px;
+        margin: 1em 0;
+        overflow-x: auto;
+    }
+
+    /* Syntax highlighting colors */
+    .codehilite .k {
+        color: #d73a49;
+    } /* Keywords */
+    .codehilite .nf {
+        color: #6f42c1;
+    } /* Functions */
+    .codehilite .s2 {
+        color: #032f62;
+    } /* Strings */
+    .codehilite .p {
+        color: #24292e;
+    } /* Punctuation */
+    .codehilite .nb {
+        color: #005cc5;
+    } /* Built-ins */
+
+    /* Line numbers if enabled */
+    .codehilite .linenos {
+        color: #6a737d;
+        padding-right: 1em;
+        user-select: none;
+    }
+
+    /* Responsive tables */
+    .codehilite table {
+        border-spacing: 0;
+        width: 100%;
+    }
+    .codehilite td {
+        padding: 0;
+    }
+    .codehilite pre {
+        margin: 0;
+    }
+
+    /* Only style tables that are direct children of markdown-content */
+    .markdown-content > table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5em 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .markdown-content > table th,
+    .markdown-content > table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    .markdown-content > table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #222;
+    }
+
+    .markdown-content > table tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    /* Make sure this doesn't affect code blocks */
+    .markdown-content > table pre,
+    .markdown-content > table code {
+        all: revert;
+        white-space: pre;
+    }
+
+    /* Headings */
+    .markdown-content h1 {
+        font-size: 2em;
+        margin: 0.67em 0;
+        font-weight: bold;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.3em;
+    }
+
+    .markdown-content h2 {
+        font-size: 1.5em;
+        margin: 0.75em 0;
+        font-weight: bold;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.3em;
+    }
+
+    .markdown-content h3 {
+        font-size: 1.25em;
+        margin: 1em 0;
+        font-weight: bold;
+    }
+
+    /* Lists */
+    .markdown-content ul,
+    .markdown-content ol {
+        margin: 1em 0;
+        padding-left: 2em;
+    }
+
+    .markdown-content li {
+        margin: 0.5em 0;
+    }
+
+    .markdown-content ul {
+        list-style-type: disc;
+    }
+
+    .markdown-content ol {
+        list-style-type: decimal;
+    }
+</style>
 <div>
     <div
-        class="markdown-content"
-        style="
-            background: white;
-            border-radius: 10px;
-            box-shadow: darkgray 5px 5px 5px;
-            max-width: 50%;
-            position: absolute;
-            left: 50%;
-            transform: translate(-50%, 0);
-            padding: 1rem;
-        "
+        class="card bg-base-100 w-200 shadow-sm mt-8"
+        style="position: absolute; left: 50%; transform: translate(-50%, 0)"
     >
-        {{content| replace('\n', '<br />') | safe}}
+        <div class="card-body">
+            <div class="markdown-content">{{content | safe}}</div>
+            <div class="card-actions justify-end">
+                <a
+                    class="btn btn-success"
+                    href="{{ url_for('quiz', quiz_id=chapter_id) }}"
+                    >Chapter Quiz</a
+                >
+            </div>
+        </div>
     </div>
-    <a href="{{ url_for('quiz', quiz_id=chapter_id) }}" class="menu-btn"
-        >Chapter Quiz</a
-    >
 </div>
 {% endblock %}
