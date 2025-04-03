@@ -19,29 +19,56 @@
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_forward"
         />
-        <script>
-            tailwind.config = {
-                daisyui: {
-                    themes: [
-                        {
-                            mytheme: {
-                                primary: "#1d4ed8",
-                                secondary: "#7e22ce",
-                                accent: "#f59e0b",
-                                neutral: "#1f2937",
-                                "base-100": "#f3f4f6",
-                                info: "#3b82f6",
-                                success: "#10b981",
-                                warning: "#f59e0b",
-                                error: "#ef4444",
-                            },
-                        },
-                    ],
-                },
-            };
-        </script>
     </head>
     <body>
+        <div class="navbar bg-base-100 shadow-sm">
+            <div class="flex-1">
+                <a class="text-xl" href="/">Welcome</a>
+            </div>
+            {% if 'user_id' in session %}
+                <div class="flex gap-2">
+                    <p class="pt-2" style="height:min-content">Level: {{ session.get('user_level', 1) }}</p>
+                    <progress
+                        class="progress progress-accent w-56 h-3 mt-4"
+                        value="{{ session.get('user_points', 0) }}"
+                        max="200"
+                    ></progress>
+                    <div class="dropdown dropdown-end">
+                        <div
+                            tabindex="0"
+                            role="button"
+                            class="btn btn-ghost btn-circle avatar"
+                        >
+                            <div class="w-10 rounded-full">
+                                <img
+                                    alt="Tailwind CSS Navbar component"
+                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                />
+                            </div>
+                        </div>
+                        {% if session.user_id %}
+                        <ul
+                            tabindex="0"
+                            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+                        >
+                            <li>
+                                <a class="justify-between">
+                                    <a href="{{ url_for('profile') }}">
+                                    Profile
+                                    <!-- <span class="badge">New</span> -->
+                                </a>
+                                <a href="{{ url_for('courses') }}">Courses</a>
+                                <a href="{{ url_for('logout') }}">Logout</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+
+        </div>
         {% with messages = get_flashed_messages() %} {% if messages %} {% for
         message in messages %} {% if message =='Invalid credentials!' %}
         <div class="flash">{{ message }}</div>

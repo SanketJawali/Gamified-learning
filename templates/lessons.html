@@ -1,13 +1,43 @@
 {% extends "base.html" %} {% block content %}
-<h2>Lessons</h2>
-<ul>
-    {% for lesson in lessons %}
-    <li>
-        {{ loop.index }}. {{ lesson.title }}
-        <a href="{{ url_for('chapter', chapter_id=lesson.id) }}"
-            >Go to chapter</a
-        >
-    </li>
-    {% endfor %}
-</ul>
+<div
+    class="w-200 items-center"
+    style="position: absolute; left: 50%; transform: translate(-50%, 0)"
+>
+    <div class="card-body">
+        <h1 class="card-title text-2xl">Lessons</h1>
+        <ul class="list bg-base-100 rounded-box shadow-md">
+            {% for lesson in lessons %}
+            <li class="list-row">
+                <div class="text-4xl font-thin opacity-30 tabular-nums">
+                    {{ loop.index }}
+                </div>
+                <div class="list-col-grow">
+                    <h3 class="text-xl">{{ lesson.title }}</h3>
+                </div>
+                <a
+                    class="btn btn-square btn-ghost"
+                    href="{{ url_for('chapter', chapter_id=lesson.id) }}"
+                >
+                    <svg
+                        class="size-[1.2em]"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <g
+                            stroke-linejoin="round"
+                            stroke-linecap="round"
+                            stroke-width="2"
+                            fill="none"
+                            stroke="currentColor"
+                        >
+                            <path d="M6 3L20 12 6 21 6 3z"></path>
+                        </g>
+                    </svg>
+                </a>
+            </li>
+            <hr />
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

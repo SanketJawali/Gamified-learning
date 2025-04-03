@@ -4,8 +4,6 @@ from app import app
 from .models import db
 from .models import User, Course
 
-# Models
-
 # Initialize Database
 def init_db():
     with app.app_context():

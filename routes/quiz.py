@@ -66,6 +66,10 @@ def quiz_page(quiz_id):
             db.session.commit()  # If you're not committing elsewhere
             flash(f'Level Up! You are now Level {user.level}!', 'success')
 
+        # Storing the level and points in session
+        session['user_level'] = user.level
+        session['user_points'] = user.points
+
     # Handle Get request
     filename = f"quiz_{quiz_id}"
     quiz_data = get_quiz(filename)
@@ -80,5 +84,5 @@ def quiz_page(quiz_id):
         quiz_id=quiz_id,
         points=quiz_data.get('points', 0),
         time_limit=quiz_data.get('time_limit_minutes', 0),
-        questions=quiz_data.get('question', [])  # Pass just the questions array
+        questions=quiz_data.get('question', [])
     )

@@ -1,19 +1,32 @@
-{% extends "base.html" %} {% block content %}
-<h2>Available Courses</h2>
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-6">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Available Courses</h2>
 
-<!-- Course Display -->
-{% if user.course %}
-<div>
-    <p>You've selected: {{ user.course }}</p>
-    <a href="{{ url_for('lessons') }}">Go to Lessons</a>
+    <!-- Course Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for course in courses %}
+        <div class="card bg-base-100 w-full shadow-sm">
+            <figure>
+                <img src="https://img-c.udemycdn.com/course/750x422/5663772_24d8_5.jpg" alt="{{ course.name }} Course" class="h-48 w-full object-cover" />
+            </figure>
+            <div class="card-body">
+                <h2 class="card-title">{{ course.name }}</h2>
+                <p>{{ course.description or 'Learn ' + course.name + ' from basics to advanced concepts.' }}</p>
+                {% if user.course == course.name %}
+                    <!-- If user is enrolled, redirect to lessons -->
+                    <a href="{{ url_for('lessons') }}" class="btn bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700">
+                        Go to Lessons
+                    </a>
+                {% else %}
+                    <!-- If not enrolled, allow enrollment -->
+                    <button onclick="selectCourse('{{ course.name }}')" class="btn bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700">
+                        Enroll!
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-{% else %} {% for course in courses %}
-<div class="course-card" onclick="selectCourse('{{ course.name }}')">
-    <img
-        src="{{ url_for('static', filename=course.image) }}"
-        alt="{{ course.name }} Course"
-        class="course-image"
-    />
-    <p class="course-name">{{ course.name }}</p>
-</div>
-{% endfor %} {% endif %} {% endblock %}
+{% endblock %}

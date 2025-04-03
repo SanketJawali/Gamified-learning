@@ -4,12 +4,20 @@ from models.models import User, Course
 from models.database import db
 
 def register_page():
+    if 'user_id' in session:
+        user = db.session.get(User, session['user_id'])
+        if user is None:
+            session.pop('user_id', None)
+            return redirect(url_for('login'))
+        if user.is_admin:
+            return redirect(url_for('admin_courses'))
+        return redirect(url_for('courses'))
+
     errors = {}
     if request.method == 'POST':
         name = request.form['name'].strip()
         username = request.form['username'].strip()
         email = request.form['email'].strip()
-        mobile = request.form['mobile'].strip()
         stream = request.form['stream'].strip()
         year = request.form['year'].strip()
         password = request.form['password']
@@ -25,10 +33,6 @@ def register_page():
             errors['email'] = 'Invalid email format.'
         if User.query.filter_by(email=email).first():
             errors['email'] = 'Email already exists!'
-        if not re.match(r"^[0-9]{10}$", mobile):
-            errors['mobile'] = 'Mobile number must be exactly 10 digits.'
-        if User.query.filter_by(mobile=mobile).first():
-            errors['mobile'] = 'Mobile number already exists!'
         if not stream:
             errors['stream'] = 'Stream is required.'
         if not year:
@@ -43,7 +47,6 @@ def register_page():
                 name=name,
                 username=username,
                 email=email,
-                mobile=mobile,
                 stream=stream,
                 year=year,
                 password=password,
@@ -54,9 +57,20 @@ def register_page():
             flash('Registration successful! Please login.')
             return redirect(url_for('login'))
         return render_template('register.html', errors=errors)
+
+    # Get request
     return render_template('register.html', errors=None)
 
 def login_page():
+    if 'user_id' in session:
+        user = db.session.get(User, session['user_id'])
+        if user is None:
+            session.pop('user_id', None)
+            return redirect(url_for('login'))
+        if user.is_admin:
+            return redirect(url_for('admin_courses'))
+        return redirect(url_for('courses'))
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -66,10 +80,14 @@ def login_page():
             #     flash('Please verify your email before logging in.')
             #     return redirect(url_for('login'))
             session['user_id'] = user.id
+            session['user_level'] = user.level
+            session['user_points'] = user.points
             if user.is_admin:
                 return redirect(url_for('admin_courses'))
             return redirect(url_for('courses'))
         flash('Invalid credentials!')
+
+    # Get Request
     return render_template('login.html')
 
 def logout_page():

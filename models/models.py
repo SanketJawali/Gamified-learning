@@ -5,7 +5,6 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    mobile = db.Column(db.String(15), unique=True, nullable=False)
     stream = db.Column(db.String(20), nullable=False)  # New: Replacing class_name
     year = db.Column(db.String(10), nullable=False)   # New: Year field
     password = db.Column(db.String(120), nullable=False)
