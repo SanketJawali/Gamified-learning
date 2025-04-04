@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Gamified Learning</title>
 
-        <script src="https://cdn.tailwindcss.com"></script>
         <link
             href="https://cdn.jsdelivr.net/npm/daisyui@5"
             rel="stylesheet"
@@ -16,14 +15,6 @@
             href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
             rel="stylesheet"
             type="text/css"
-        />
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_forward"
-        />
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back"
         />
     </head>
     <body>
@@ -55,11 +46,12 @@
                             role="button"
                             class="btn btn-ghost btn-circle avatar"
                         >
-                            <div class="w-10 rounded-full">
-                                <img
-                                    alt="Tailwind CSS Navbar component"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                />
+                            <div
+                                class="w-10 rounded-full ring ring-blue ring-offset-2 ring-offset-blue-500 bg-blue-200"
+                            >
+                                <span class="text-3xl"
+                                    >{{ user.name|first }}</span
+                                >
                             </div>
                         </div>
                         {% if session.user_id %}

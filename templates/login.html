@@ -1,111 +1,119 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
-<div class="bg-[url(https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);] bg-cover bg-center bg-fixed h-screen w-full">
-<div class="min-h-screen w-full bg-black/50 backdrop-blur-sm">
+<div
+    class="bg-[url(https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);] bg-cover bg-center bg-fixed h-screen w-full"
+>
+    <div class="min-h-screen w-full bg-black/50 backdrop-blur-sm">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category,message in messages %}
+        <div
+            role="alert"
+            class="alert alert-{{ category }} max-w-md mx-auto z-20 mt-5"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+            </svg>
+            <span>{{ message }}</span>
+        </div>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-    {% for category,message in messages %}
-            <div role="alert" class="alert alert-{{ category }} max-w-md mx-auto z-20 mt-5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{{ message }}</span>
-            </div>
-    
-    {% endfor %}
-{% endif %}
-{% endwith %}
+        {% endfor %} {% endif %} {% endwith %}
 
-<div>
-    
-        <div class="min-h-screen flex items-center justify-center">
-            <div class="card w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-                <!-- Logo -->
-                <div class="flex justify-center mb-6">
-                    <svg
-                        class="h-8 w-8 text-blue-600"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
+        <div>
+            <div class="min-h-screen flex items-center justify-center">
+                <div
+                    class="card w-full max-w-md bg-white shadow-lg rounded-lg p-8"
+                >
+                    <!-- Logo -->
+                    <div class="flex justify-center">
+                        <img
+                            class="size-20"
+                            src="/static/logo.png"
+                            alt="logo"
+                        />
+                    </div>
+
+                    <!-- Heading -->
+                    <h2
+                        class="text-2xl font-bold text-center text-gray-800 mb-6"
                     >
-                        <!-- Placeholder for your logo (replace with your SVG or image) -->
-                        <path
-                            d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"
-                        ></path>
-                    </svg>
-                </div>
+                        Sign in to your account
+                    </h2>
 
-                <!-- Heading -->
-                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-                    Sign in to your account
-                </h2>
-
-                <!-- Form -->
-                <form method="POST" class="space-y-4">
-                    <!-- Email -->
-                    <div>
-                        <label
-                            for="username"
-                            class="block text-mm font-medium text-gray-700"
-                            >Username</label
-                        >
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            class="input input-bordered w-full mt-1 border-solid border-2 pl-1"
-                            required
-                        />
-                    </div>
-
-                    <!-- Password -->
-                    <div>
-                        <label
-                            for="password"
-                            class="block text-mm font-medium text-gray-700"
-                            >Password</label
-                        >
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="input input-bordered w-full mt-1 border-solid border-2 pl-1"
-                            required
-                        />
-                    </div>
-
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center">
-                            <input
-                                type="checkbox"
-                                class="checkbox checkbox-sm mr-2 border-solid border-2"
-                            />
-                            <span class="text-sm text-gray-600"
-                                >Remember me</span
+                    <!-- Form -->
+                    <form method="POST" class="space-y-4">
+                        <!-- Email -->
+                        <div>
+                            <label
+                                for="username"
+                                class="block text-mm font-medium text-gray-700"
+                                >Username</label
                             >
-                        </label>
-                        <a
-                            href="#"
-                            class="text-sm text-blue-600 hover:underline"
-                            >Forgot password?</a
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="input input-bordered w-full mt-1 border-solid border-2 pl-1"
+                                required
+                            />
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label
+                                for="password"
+                                class="block text-mm font-medium text-gray-700"
+                                >Password</label
+                            >
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="input input-bordered w-full mt-1 border-solid border-2 pl-1"
+                                required
+                            />
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    class="checkbox checkbox-sm mr-2 border-solid border-2"
+                                />
+                                <span class="text-sm text-gray-600"
+                                    >Remember me</span
+                                >
+                            </label>
+                            <a
+                                href="#"
+                                class="text-sm text-blue-600 hover:underline"
+                                >Forgot password?</a
+                            >
+                        </div>
+
+                        <!-- Sign In Button -->
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-full bg-purple-600 hover:bg-purple-700 text-white"
                         >
-                    </div>
+                            Sign in
+                        </button>
+                    </form>
 
-                    <!-- Sign In Button -->
-                    <button
-                        type="submit"
-                        class="btn btn-primary w-full bg-purple-600 hover:bg-purple-700 text-white"
-                    >
-                        Sign in
-                    </button>
-                </form>
+                    <!-- Divider -->
+                    <div class="divider text-gray-500 my-5">Or</div>
 
-                <!-- Divider -->
-                <div class="divider text-gray-500 my-5">Or</div>
-
-                <!-- Social Buttons
+                    <!-- Social Buttons
         <div class="flex gap-4 justify-center">
             <button class="btn btn-outline flex items-center gap-2">
                 <img src="https://www.google.com/favicon.ico" alt="Google" class="h-5 w-5">
@@ -117,20 +125,19 @@
             </button>
         </div> -->
 
-                <!-- Footer Link -->
-                <p class="text-center mt-6 text-sm text-gray-600">
-                    <u>Don't have account</u>
-                    <a
-                        href="{{ url_for('register') }}"
-                        class="text-blue-600 hover:underline"
-                        >Register</a
-                    >
-                </p>
+                    <!-- Footer Link -->
+                    <p class="text-center mt-6 text-sm text-gray-600">
+                        <u>Don't have account</u>
+                        <a
+                            href="{{ url_for('register') }}"
+                            class="text-blue-600 hover:underline"
+                            >Register</a
+                        >
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-    </div>
 </div>
-
 
 {% endblock %}

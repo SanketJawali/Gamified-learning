@@ -25,7 +25,7 @@ category,message in messages %}
 <div
     class="flex items-center justify-center gap-2 w-60 m-4 btn btn-soft btn-primary"
 >
-    <span class="material-symbols-outlined"> arrow_back </span>
+    <img src="/static/arrow_b.png" alt="back" class="size-6" />
     <a href="{{ url_for('lessons') }}">Back to Lessons</a>
 </div>
 <div
@@ -43,26 +43,26 @@ category,message in messages %}
                             <div class="card-body">
                                 <span class="card-title text-lg">
                                     Question {{ loop.index }}: {{ q.text |
-                                    replace('\n', '<br />')}}
+                                    replace('\n', '<br />') | safe}}
                                 </span>
                                 <hr class="my-2" />
                                 <div class="space-y-2">
                                     {% for option in q.options %}
                                     <div class="flex items-center gap-2">
                                         <input
+                                            class="size-4"
                                             type="radio"
                                             name="{{ q.id }}"
                                             value="{{ loop.index0 }}"
                                             id="{{ q.id }}_{{ loop.index }}"
                                             required
-                                            class="radio radio-primary"
                                         />
                                         <label
                                             for="{{ q.id }}_{{ loop.index }}"
                                             class="text-base cursor-pointer"
                                         >
                                             {{ option | replace('\n', '<br />')
-                                            }}
+                                            | safe }}
                                         </label>
                                     </div>
                                     {% endfor %}
@@ -70,9 +70,7 @@ category,message in messages %}
                             </div>
                         </div>
                     </li>
-                    {% if not loop.last %}
-                    <hr class="my-4" />
-                    {% endif %} {% endfor %}
+                    {% endfor %}
                 </ul>
 
                 <!-- Properly placed submit button -->

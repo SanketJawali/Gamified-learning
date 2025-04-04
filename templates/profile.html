@@ -1,13 +1,160 @@
-{% extends "base.html" %}
-{% block content %}
-    <h2>Profile</h2>
-    <p>Name: {{ user.name }}</p>
-    <p>Username: {{ user.username }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Mobile: {{ user.mobile }}</p>
-    <p>Selcted Stream: {{ user.stream }}</p>
-    <p>Year: {{ user.year }}</p>
-    <p>Course: {{ user.course or 'Not selected' }}</p>
-    <p>Completed Lessons: {{ user.completed_lessons or 'None' }}</p>
-    <a href="{{ url_for('courses') }}" class="back-btn">Back to Courses</a>
+{% extends "base.html" %} {% block content %}
+<div class="min-h-screen bg-gray-100 p-6 flex items-center justify-center">
+    <div class="w-full max-w-2xl">
+        <!-- Profile Header -->
+
+        <!-- Stats Section -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 -mt-6 px-6">
+            <!-- Points -->
+            <div
+                class="bg-white rounded-lg shadow-md p-4 text-center transform hover:scale-105 transition-transform duration-300"
+            >
+                <div class="flex justify-center mb-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 text-yellow-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg>
+                </div>
+                <h3 class="text-sm font-medium text-gray-600">Points</h3>
+                <p class="text-lg font-bold text-gray-800">{{ user.points }}</p>
+            </div>
+            <!-- Completed Lessons -->
+            <div
+                class="bg-white rounded-lg shadow-md p-4 text-center transform hover:scale-105 transition-transform duration-300"
+            >
+                <div class="flex justify-center mb-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 text-green-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 13l4 4L19 7"
+                        />
+                    </svg>
+                </div>
+                <h3 class="text-sm font-medium text-gray-600">
+                    Completed Lessons
+                </h3>
+                <p class="text-lg font-bold text-gray-800">
+                    {% if user.completed_lessons %} {{
+                    user.completed_lessons.split(',')|length }} {% else %} 0 {%
+                    endif %}
+                </p>
+            </div>
+            <!-- Progress -->
+            <div
+                class="bg-white rounded-lg shadow-md p-4 text-center transform hover:scale-105 transition-transform duration-300"
+            >
+                <div class="flex justify-center mb-2"></div>
+                <div
+                    class="radial-progress text-primary"
+                    style="--value: {{ (user.completed_lessons.split(',')|length / 14 * 100) if user.completed_lessons else 0 }}"
+                    aria-valuenow="10"
+                    role="progressbar"
+                >
+                    {{ (user.completed_lessons.split(',')|length / 14 * 100)|int
+                    if user.completed_lessons else 0 }}%
+                </div>
+            </div>
+
+            <!-- <div class="bg-white rounded-lg shadow-md p-4 text-center transform hover:scale-105 transition-transform duration-300">
+                <div class="flex justify-center mb-2">
+                    <div class="radial-progress text-blue-500" style="--value:{{ (user.completed_lessons.split(',')|length / 3 * 100) if user.completed_lessons else 0 }}; --size: 3rem; --thickness: 0.5rem;">
+                        {{ (user.completed_lessons.split(',')|length / 3 * 100)|int if user.completed_lessons else 0 }}%
+                    </div>
+                </div>
+                <h3 class="text-sm font-medium text-gray-600">Course Progress</h3>
+            </div> -->
+        </div>
+
+        <div
+            class="card bg-white/80 backdrop-blur-md shadow-lg rounded-b-lg mt-6"
+        >
+            <!-- Profile Details -->
+
+            <div
+                class="relative bg-gradient-to-r from-blue-500 to-purple-600 rounded-t-lg p-6 text-black"
+            >
+                <div class="flex items-center gap-4">
+                    <div>
+                        <!-- User Info -->
+                        <div class="absolute ml-30 pl-2">
+                            <h2 class="text-3xl font-bold">{{ user.name }}</h2>
+                            <p class="text-sm opacity-50">
+                                @{{ user.username }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Avatar -->
+                <div class="avatar avatar-placeholder">
+                    <div
+                        class="w-20 rounded-full ring ring-white ring-offset-4 ring-offset-blue-500 bg-blue-200"
+                    >
+                        <span class="text-4xl">{{ user.name|first }}</span>
+                    </div>
+                </div>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2 pt-4 pl-4">
+                Details
+            </h3>
+            <div class="space-y-4 pl-4 pt-2">
+                <!-- Email -->
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-700 w-32"
+                        >Email:</span
+                    >
+                    <span class="text-gray-900">{{ user.email }}</span>
+                </div>
+                <!-- Stream -->
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-700 w-32"
+                        >Stream:</span
+                    >
+                    <span class="text-gray-900">{{ user.stream }}</span>
+                </div>
+                <!-- Year -->
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-700 w-32"
+                        >Year:</span
+                    >
+                    <span class="text-gray-900">{{ user.year }}</span>
+                </div>
+                <!-- Enrolled Course -->
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-700 w-32"
+                        >Enrolled Course:</span
+                    >
+                    <span class="text-gray-900"
+                        >{{ user.course or 'Not enrolled' }}</span
+                    >
+                </div>
+            </div>
+
+            <!-- Back to Courses Button -->
+            <div class="mt-8">
+                <a href="{{ url_for('courses') }}" class="btn btn-primary w-50"
+                    >Back to Courses</a
+                >
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

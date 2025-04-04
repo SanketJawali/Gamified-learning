@@ -5,12 +5,13 @@ from models.models import User, Course
 from models.database import db
 
 def home_page():
-    # if 'user_id' in session:
-    #     user = db.session.get(User, session['user_id'])
-    #     if user is None:
-    #         session.pop('user_id', None)
-    #         return redirect(url_for('login'))
+    if 'user_id' in session:
+        user = db.session.get(User, session['user_id'])
+        if user is None:
+            session.pop('user_id', None)
+            return redirect(url_for('login'))
+        return render_template('home.html', user=user)
     #     if user.is_admin:
     #         return redirect(url_for('admin_courses'))
-    #     return redirect(url_for('courses'))
+        # return redirect(url_for('courses'))
     return render_template('home.html')
