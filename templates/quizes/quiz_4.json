@@ -1,0 +1,81 @@
+{
+  "time_limit_minutes": 10,
+  "points": 100,
+  "questions": [
+    {
+      "id": "q1",
+      "text": "What will this code print if the user enters `15`?\n```python\nage = int(input('Enter age: '))\nif age >= 18:\n    print('Adult')\nelse:\n    print('Minor')\n```",
+      "options": ["Adult", "Minor", "Error", "Nothing"]
+    },
+    {
+      "id": "q2",
+      "text": "Which condition correctly checks if a number is between 10 and 20 (inclusive)?",
+      "options": [
+        "if num > 10 and num < 20:",
+        "if num >= 10 or num <= 20:",
+        "if num >= 10 and num <= 20:",
+        "if 10 <= num <= 20:"
+      ]
+    },
+    {
+      "id": "q3",
+      "text": "What is the output of this code?\n```python\nx = 5\nif x > 3:\n    if x < 10:\n        print('A')\n    else:\n        print('B')\nelse:\n    print('C')\n```",
+      "options": ["A", "B", "C", "Error"]
+    },
+    {
+      "id": "q4",
+      "text": "How many conditions can an `elif` chain have?",
+      "options": [
+        "Only 1",
+        "Up to 3",
+        "Unlimited",
+        "Python doesn't support `elif`"
+      ]
+    },
+    {
+      "id": "q5",
+      "text": "What does this code print if `has_ticket = True` and `age = 16`?\n```python\nif has_ticket and age >= 18:\n    print('Enter')\nelse:\n    print('No entry')\n```",
+      "options": ["Enter", "No entry", "True", "False"]
+    },
+    {
+      "id": "q6",
+      "text": "Which operator would make this condition True when `x = 5`?\n```python\nif x __ 10:\n    print('Valid')\n```",
+      "options": [">", "<", "==", "!="]
+    },
+    {
+      "id": "q7",
+      "text": "What is the output of this code?\n```python\nweather = 'rainy'\nif weather == 'sunny':\n    print('Wear sunglasses')\nelif weather == 'rainy':\n    print('Bring an umbrella')\nelse:\n    print('Check weather forecast')\n```",
+      "options": [
+        "Wear sunglasses",
+        "Bring an umbrella",
+        "Check weather forecast",
+        "Error"
+      ]
+    },
+    {
+      "id": "q8",
+      "text": "Which statement about `if-elif-else` is FALSE?",
+      "options": [
+        "Only one block executes, even if multiple conditions are True",
+        "`else` is mandatory in every `if` statement",
+        "Conditions are checked from top to bottom",
+        "`elif` can be used multiple times"
+      ]
+    },
+    {
+      "id": "q9",
+      "text": "What does this code print?\n```python\nx = 0\nif x:\n    print('A')\nelse:\n    print('B')\n```",
+      "options": ["A", "B", "Error", "Nothing"]
+    },
+    {
+      "id": "q10",
+      "text": "How would you check if a number is NOT between 5 and 10?",
+      "options": [
+        "if num < 5 and num > 10:",
+        "if num <= 5 or num >= 10:",
+        "if not(5 < num < 10):",
+        "Both 2 and 3"
+      ]
+    }
+  ]
+}

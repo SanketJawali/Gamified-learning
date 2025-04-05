@@ -80,10 +80,7 @@
         />
     </li>
     {% else %}
-    <li
-        name="left"
-        class="{% if loop.index|string in completed_lessons_list %}bg-green-300{% endif %}"
-    >
+    <li name="left">
         <hr
             {%
             if
@@ -161,5 +158,4 @@
         </div>
     </li>
 </ul>
-
 {% endblock %}

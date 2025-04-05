@@ -1,7 +1,7 @@
 {
   "time_limit_minutes": 5,
   "points": 80,
-  "question": [
+  "questions": [
     {
       "id": "q1",
       "text": "What happens if you forget to check 'Add Python to PATH' during installation?",

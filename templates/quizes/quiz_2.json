@@ -1,0 +1,66 @@
+{
+  "time_limit_minutes": 10,
+  "points": 100,
+  "questions": [
+    {
+      "id": "q1",
+      "text": "What will `print(3 + '7')` output in Python?",
+      "options": ["10", "37", "Error (cannot add int and str)", "7.0"]
+    },
+    {
+      "id": "q2",
+      "text": "If `user_input = input('Enter a number: ')` and you type `12`, what is the data type of `user_input`?",
+      "options": ["int", "float", "str", "bool"]
+    },
+    {
+      "id": "q3",
+      "text": "Which variable name is NOT valid in Python?",
+      "options": ["user_age", "_temp", "2nd_place", "is_valid"]
+    },
+    {
+      "id": "q4",
+      "text": "What does `print(bool('False'))` output?",
+      "options": ["False", "True", "Error", "None"]
+    },
+    {
+      "id": "q5",
+      "text": "How would you store the value π (3.14159) as a float in Python?",
+      "options": [
+        "pi = '3.14159'",
+        "pi = 3.14159",
+        "pi = float(3.14159)",
+        "Both 2 and 3 are correct"
+      ]
+    },
+    {
+      "id": "q6",
+      "text": "What happens if you run `age = 25` followed by `age = 'twenty-five'`?",
+      "options": [
+        "Error (can't change data types)",
+        "Python updates the variable type to str",
+        "The variable becomes a list",
+        "Nothing; the second line is ignored"
+      ]
+    },
+    {
+      "id": "q7",
+      "text": "Which operation would convert the string `'100'` to the integer `100`?",
+      "options": ["int('100')", "str(100)", "float('100')", "Both 1 and 3"]
+    },
+    {
+      "id": "q8",
+      "text": "What is the output of `print('Hi' * 3)`?",
+      "options": ["HiHiHi", "Hi 3", "Error", "Hi*3"]
+    },
+    {
+      "id": "q9",
+      "text": "If `colors = ['red', 'green', 'blue']`, what does `colors[1]` return?",
+      "options": ["'red'", "'green'", "'blue'", "Error (index out of range)"]
+    },
+    {
+      "id": "q10",
+      "text": "Which keyword would cause an error if used as a variable name?",
+      "options": ["list", "max", "try", "All of the above"]
+    }
+  ]
+}

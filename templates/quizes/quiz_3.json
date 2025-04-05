@@ -1,0 +1,71 @@
+{
+  "time_limit_minutes": 10,
+  "points": 100,
+  "questions": [
+    {
+      "id": "q1",
+      "text": "What is the output of `print(7 // 3 + 2 ** 2)`?",
+      "options": ["5", "6", "7", "Error"]
+    },
+    {
+      "id": "q2",
+      "text": "Which expression evaluates to `True` if `age = 20` and `score = 85`?",
+      "options": [
+        "age > 18 and score < 80",
+        "age >= 20 or score == 85",
+        "not(age == 20) and score > 90",
+        "age != 20 or score <= 85"
+      ]
+    },
+    {
+      "id": "q3",
+      "text": "What does `x %= 3` do if `x = 10` initially?",
+      "options": [
+        "Sets x to 3",
+        "Sets x to 1 (remainder of 10 ÷ 3)",
+        "Sets x to 10",
+        "Raises an error"
+      ]
+    },
+    {
+      "id": "q4",
+      "text": "Which operator checks if two variables point to the *same object* (not just equal values)?",
+      "options": ["==", "=", "is", "in"]
+    },
+    {
+      "id": "q5",
+      "text": "What is the result of `'hello' in 'hello world'`?",
+      "options": [
+        "True",
+        "False",
+        "Error (cannot use 'in' with strings)",
+        "None"
+      ]
+    },
+    {
+      "id": "q6",
+      "text": "If `a = 5` and `b = 2`, what is `a * b + a / b`?",
+      "options": ["12.5", "11", "10.5", "Error"]
+    },
+    {
+      "id": "q7",
+      "text": "Which of these is NOT a valid assignment operator?",
+      "options": ["+=", "**=", "//=", "%%="]
+    },
+    {
+      "id": "q8",
+      "text": "What does `not(5 > 3 or 2 < 1)` evaluate to?",
+      "options": ["True", "False", "Error", "None"]
+    },
+    {
+      "id": "q9",
+      "text": "If `colors = ['red', 'blue']`, what is `'green' not in colors`?",
+      "options": ["True", "False", "Error", "None"]
+    },
+    {
+      "id": "q10",
+      "text": "What is the output of `print(10 == '10')`?",
+      "options": ["True", "False", "Error", "None"]
+    }
+  ]
+}
