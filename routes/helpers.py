@@ -1,7 +1,48 @@
 import markdown, os
 from markupsafe import Markup
 import json
-from flask import current_app
+from models.models import User, Chapter, Course, UserChapterProgress
+from flask import current_app, send_from_directory
+from models.database import db
+import os
+from werkzeug.exceptions import NotFound
+
+def get_course_lessons(course_id):
+    """
+    Retrieve all chapter names/titles for a specific course
+    
+    Args:
+        course_id (int): ID of the course
+    
+    Returns:
+        list: List of chapter dictionaries with id and title, ordered by chapter order
+        None: If course doesn't exist or has no chapters
+    """
+    try:
+        # Get the course with its chapters
+        course = Course.query.get(course_id)
+        
+        if not course:
+            return None
+            
+        # Get all chapters ordered by their 'order' field
+        chapters = Chapter.query.filter_by(
+            course_id=course_id
+        ).order_by(Chapter.order.asc()).all()
+        
+        if not chapters:
+            return None
+            
+        return [{
+            'id': chapter.id,
+            'title': chapter.title,
+            'order': chapter.order
+        } for chapter in chapters]
+        
+    except Exception as e:
+        # Log the error in a real application
+        print(f"Error fetching course chapters: {str(e)}")
+        return None
 
 def markdown_to_html(markdown_text):
     extensions = [
@@ -29,28 +70,39 @@ def markdown_to_html(markdown_text):
     )
     return Markup(html)
 
-def get_chapter_content(filename):
-    # Define the base directory
-    chapters_dir = os.path.join("templates", "chapters")
-
-    # Construct full file path
-    filepath = os.path.join(chapters_dir, filename)
-
+def get_chapter_content(course_id, chapter_id):
+    """
+    Retrieve chapter content for a specific chapter in a course
+    
+    Args:
+        course_id (int): ID of the course
+        chapter_id (int): ID of the chapter
+    
+    Returns:
+        dict: Chapter details including title and content if found
+        None: If chapter doesn't exist or doesn't belong to the course
+    """
     try:
-        with open(filepath, 'r', encoding='utf-8') as file:
-            return file.read()
-    except FileNotFoundError:
-        raise FileNotFoundError(
-            f"Chapter '{filename}' not found in {chapters_dir}/ directory"
-        )
-    except PermissionError:
-        raise PermissionError(
-            f"Permission denied reading {filepath}"
-        )
-    except UnicodeDecodeError:
-        # Fallback to binary if UTF-8 fails
-        with open(filepath, 'rb') as file:
-            return file.read().decode('utf-8', errors='replace')
+        # First verify the chapter belongs to the specified course
+        chapter = Chapter.query.filter_by(
+            id=chapter_id,
+            course_id=course_id
+        ).first()
+        
+        if chapter:
+            return {
+                'id': chapter.id,
+                'title': chapter.title,
+                'content': chapter.content,
+                'order': chapter.order,
+                'course_id': chapter.course_id
+            }
+        return None
+        
+    except Exception as e:
+        # Log the error in a real application
+        print(f"Error fetching chapter content: {str(e)}")
+        return None
 
 def get_quiz(filename):
     try:
@@ -99,3 +151,96 @@ def get_quiz_answers(filename):
     except Exception as e:
         current_app.logger.error(f"Error loading answers: {e}")
         return None
+
+def get_completed_chapters(user_id, course_id=None):
+    """
+    Get all completed chapters for a user, optionally filtered by course
+    
+    Args:
+        user_id (int): ID of the user
+        course_id (int, optional): Specific course ID to filter by
+        
+    Returns:
+        dict: {
+            'completed_chapters': list of chapter IDs,
+            'total_in_course': total chapters in course (if course_id provided),
+            'completion_percentage': percentage completed (if course_id provided)
+        }
+        or None if user doesn't exist
+    """
+    # Verify user exists
+    user = db.session.get(User, user_id)
+    if not user:
+        return None
+
+    # Base query for completed chapters
+    query = db.session.query(
+        UserChapterProgress.chapter_id,
+        Chapter.course_id,
+        Chapter.title
+    ).join(
+        Chapter,
+        UserChapterProgress.chapter_id == Chapter.id
+    ).filter(
+        UserChapterProgress.user_id == user_id,
+        UserChapterProgress.completed == True
+    )
+
+    # Filter by course if specified
+    if course_id:
+        query = query.filter(Chapter.course_id == course_id)
+
+    # Execute query
+    completed_chapters = query.all()
+
+    # Prepare results
+    result = {
+        'completed_chapters': [{
+            'chapter_id': chap.chapter_id,
+            'title': chap.title,
+            'course_id': chap.course_id
+        } for chap in completed_chapters]}
+
+    return result
+
+
+def get_course_image(course_id):
+    """
+    Retrieve a course image from storage
+    
+    Args:
+        course_id (int): ID of the course
+    
+    Returns:
+        Response: Flask send_file response with the image
+        None: If no image exists for the course
+    
+    Raises:
+        NotFound: If image file doesn't exist
+    """
+    course = Course.query.get(course_id)
+    if not course or not course.image:
+        return None
+    
+    # Construct full path from the stored relative path
+    image_path = os.path.join('static', course.image)
+    
+    # Verify the file exists
+    if not os.path.exists(image_path):
+        raise NotFound(f"Image not found at {image_path}")
+    
+    # Get directory and filename for send_from_directory
+    directory = os.path.join('static', 'uploads', 'courses')
+    filename = os.path.basename(course.image)
+    try:
+        return send_from_directory(directory, filename)
+    except NotFound:
+        # Return default image if course image doesn't exist
+        return send_from_directory('static', 'star.png')
+    except Exception as e:
+        return None
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

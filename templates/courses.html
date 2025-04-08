@@ -1,4 +1,13 @@
 {% extends "base.html" %} {% block content %}
+<style>
+.img {
+   object-fit: cover;
+   width: 50px;
+   height: 100px;
+}
+
+</style>
+
 <div class="min-h-screen bg-gray-100 p-6">
     <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">
         Available Courses
@@ -8,12 +17,11 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for course in courses %}
         <div class="card bg-base-100 w-full shadow-sm">
-            <figure>
-                <img
-                    src="https://img-c.udemycdn.com/course/750x422/5663772_24d8_5.jpg"
-                    alt="{{ course.name }} Course"
-                    class="h-48 w-full object-cover"
-                />
+            <figure class="fill">
+                <img src="{{ url_for('static', filename=course.image) }}" 
+                alt="{{ course.name }} 
+                class="course-image max-h-[270px]"
+                >
             </figure>
             <div class="card-body">
                 <h2 class="card-title">{{ course.name }}</h2>
@@ -32,7 +40,7 @@
                 {% else %}
                 <!-- If not enrolled, allow enrollment -->
                 <button
-                    onclick="selectCourse('{{ course.name }}')"
+                    onclick="selectCourse('{{ course.id }}')"
                     class="btn bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700"
                 >
                     Enroll!
@@ -44,29 +52,76 @@
     </div>
 </div>
 <script>
-    function selectCourse(courseName) {
-        fetch("/select_course", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ course: courseName }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    window.location.href = data.redirect; // Redirect to lessons
-                } else {
-                    alert(
-                        "Error selecting course: " +
-                            (data.error || "Unknown error"),
-                    );
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                alert("Failed to select course");
-            });
-    }
+    function selectCourse(courseId) {
+    // Show loading state (optional but recommended)
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<span class="loading loading-spinner"></span> Enrolling...';
+    button.disabled = true;
+
+    fetch("/select_course", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            // Add CSRF token if you're using Flask-WTF
+            "X-CSRFToken": document.querySelector('meta[name="csrf-token"]')?.content
+        },
+        body: JSON.stringify({ course: courseId }),
+        credentials: "include"  // Important for session cookies
+    })
+    .then(async (response) => {
+        // Reset button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+
+        // Check for non-OK responses (404, 500, etc.)
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        }
+
+        // Verify JSON content
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("Received non-JSON response");
+        }
+
+        return response.json();
+    })
+    .then((data) => {
+        if (data.success) {
+            // Use the redirect URL from the response
+            window.location.href = data.redirect;
+        } else {
+            // Show more detailed error message
+            const errorMsg = data.error || "Failed to enroll in course";
+            showToast(errorMsg, 'error'); // Replace with your preferred notification method
+        }
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+        // Reset button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+        // User-friendly error message
+        showToast(error.message || "Network error. Please try again.", 'error');
+    });
+}
+
+// Helper function for showing notifications (you can replace with your preferred UI)
+function showToast(message, type = 'info') {
+    // Example using DaisyUI toast - you'll need to have this in your HTML
+    const toast = document.createElement('div');
+    toast.className = `toast toast-top toast-end`;
+    toast.innerHTML = `
+        <div class="alert alert-${type}">
+            <span>${message}</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
 </script>
 {% endblock %}

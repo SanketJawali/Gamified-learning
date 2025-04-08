@@ -1,27 +1,220 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2>Manage Courses</h2>
+{% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category,message in messages %}
+    <div
+        role="alert"
+        class="alert alert-{{ category }} max-w-md mx-auto z-20 mt-5"
+    >
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+        </svg>
+        <span>{{ message }}</span>
+    </div>
 
-    <!-- Add Course Form -->
-    <form method="POST">
-        <input type="text" name="course_name" placeholder="Course Name" required>
-        <input type="text" name="course_image" placeholder="Image File (e.g., python_logo.png)" required>
-        <input type="submit" name="add_course" value="Add Course">
-    </form>
+    {% endfor %} {% endif %} {% endwith %}
+    <div class="min-h-screen flex items-center justify-center p-4" style="width: 60%; position: relative; left: 50%; transform: translate(-50%, 0);">
+        <div class="card w-full max-w-3xl bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">Manage Courses</h2>
+                
+                <!-- Single Form for All Operations -->
+                <form method="POST" id="courseForm" enctype="multipart/form-data">
+                    <!-- Course Information Section -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold">Course Information</h3>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Course Name</span>
+                            </label>
+                            <input type="text" name="course_name" placeholder="Enter course name" 
+                                   class="input input-bordered w-full" required>
+                        </div>
 
-    <!-- Course List -->
-    <h3>Existing Courses</h3>
-    <ul>
-        {% for course in courses %}
-            <li>
-                {{ course.name }} (Image: {{ course.image }})
-                <form method="POST" style="display:inline;">
-                    <input type="hidden" name="course_id" value="{{ course.id }}">
-                    <input type="submit" name="delete_course" value="Delete" onclick="return confirm('Are you sure?');">
+                        <div class="form-control">
+                            <fieldset class="fieldset">
+                                <legend class="fieldset-legend">Pick an image</legend>
+                                <input name="course_image" type="file" class="file-input" required />
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <!-- Chapters Section -->
+                    <div class="mt-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Chapters</h3>
+                            <button type="button" id="addChapterBtn" class="btn btn-primary btn-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Add
+                            </button>
+                        </div>
+
+                        <div id="chaptersContainer" class="space-y-4">
+                            <!-- Initial Chapter -->
+                            <div class="chapter card bg-base-200" data-chapter-id="1">
+                                <div class="card-body p-4">
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">Chapter Title</span>
+                                        </label>
+                                        <input type="text" name="chapter_title_1" placeholder="Enter chapter title" 
+                                               class="input input-bordered" required>
+                                    </div>
+                                    <div class="form-control mt-2">
+                                        <label class="label">
+                                            <span class="label-text">Chapter Content</span>
+                                        </label>
+                                        <textarea name="chapter_content_1" placeholder="Enter chapter content" 
+                                                  class="textarea textarea-bordered" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="mt-8 flex justify-between">
+                        <a href="{{ url_for('profile') }}" class="btn btn-neutral">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                            </svg>
+                            Back to Profile
+                        </a>
+                        <button type="submit" name="add_course" class="btn btn-accent">
+                            Save Course
+                        </button>
+                    </div>
                 </form>
-            </li>
-        {% endfor %}
-    </ul>
+                <hr>
+                <!-- Course List Section -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4">Existing Courses</h3>
+                    <div class="overflow-x-auto">
+                        <table class="table w-full">
+                            <thead>
+                                <tr>
+                                    <th>Course Name</th>
+                                    <th>Image</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                    <tr>
+                                        <td>{{ course.name }}</td>
+                                        <td>{{ course.image }}</td>
+                                        <td>
+                                            <button class="btn btn-error btn-sm delete-course-btn"
+                                                data-course-id="{{ course.id}}"
+                                                data-course-name="{{ course.name }}"
+                                            >
+                                            Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ url_for('profile') }}" class="back-btn">Back to Profile</a>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chaptersContainer = document.getElementById('chaptersContainer');
+            const addChapterBtn = document.getElementById('addChapterBtn');
+            let chapterCounter = 1;
+
+            addChapterBtn.addEventListener('click', function() {
+                chapterCounter++;
+                const newChapter = document.createElement('div');
+                newChapter.className = 'chapter card bg-base-200';
+                newChapter.dataset.chapterId = chapterCounter;
+                newChapter.innerHTML = `
+                    <div class="card-body p-4">
+                        <div class="flex justify-end">
+                            <button type="button" class="btn btn-circle btn-xs btn-error remove-chapter">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Chapter Title</span>
+                            </label>
+                            <input type="text" name="chapter_title_${chapterCounter}" 
+                                   placeholder="Enter chapter title" class="input input-bordered" required>
+                        </div>
+                        <div class="form-control mt-2">
+                            <label class="label">
+                                <span class="label-text">Chapter Content</span>
+                            </label>
+                            <textarea name="chapter_content_${chapterCounter}" 
+                                     placeholder="Enter chapter content" 
+                                     class="textarea textarea-bordered" required></textarea>
+                        </div>
+                    </div>
+                `;
+                chaptersContainer.appendChild(newChapter);
+                
+                // Add event listener to the new remove button
+                newChapter.querySelector('.remove-chapter').addEventListener('click', function() {
+                    newChapter.remove();
+                });
+                
+                // Scroll to the new chapter
+                newChapter.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+
+        function getCsrfToken() {
+            return document.cookie.split('; ')
+                .find(row => row.startsWith('csrf_token='))
+                ?.split('=')[1];
+        }
+
+        document.body.addEventListener('click', function(event) {
+            const deleteBtn = event.target.closest('.delete-course-btn');
+            if (deleteBtn) {
+                event.preventDefault();
+                const courseId = deleteBtn.getAttribute('data-course-id');
+                const courseName = deleteBtn.getAttribute('data-course-name');
+                
+                if (confirm(`Are you sure you want to permanently delete "${courseName}"?`)) {
+                    htmx.ajax('DELETE', `/admin/delete_course/${courseId}`, {
+                        headers: {
+                            'X-CSRFToken': getCsrfToken()
+                        },
+                        swap: 'none',
+                        target: 'body'
+                    }).then(() => {
+                        showToast('Course deleted successfully', 'success');
+                        // Option 1: Remove the element directly
+                        deleteBtn.closest('tr').remove();
+                        
+                        // Option 2: Or reload after delay
+                        // setTimeout(() => window.location.reload(), 1500);
+                    }).catch(error => {
+                        showToast('Failed to delete course', 'error');
+                        console.error('Delete error:', error);
+                    });
+                }
+            }
+        });
+    </script>
 {% endblock %}

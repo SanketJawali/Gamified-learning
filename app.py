@@ -4,6 +4,7 @@ from models import init_db, db
 from routes import *
 import os
 import re
+import secrets
 
 
 def create_app():
@@ -25,9 +26,13 @@ def create_app():
 
     app.add_url_rule('/select_course', 'select_course', course.select_course_page, methods=['POST'])
 
+    app.add_url_rule('/admin/image/<int:course_id>', 'course_image', admin. get_course_image)
+
     app.add_url_rule('/admin_courses', 'admin_courses', admin.admin_courses_page, methods=['GET', 'POST'])
 
-    app.add_url_rule('/lessons', 'lessons', lesson.lessons_page)
+    app.add_url_rule('/admin/delete_course/<int:course_id>', 'admin_delete', admin.delete_course, methods=['DELETE'])
+
+    app.add_url_rule('/lessons/<int:course_id>', 'lessons', lesson.lessons_page)
 
     app.add_url_rule('/chapter/<int:chapter_id>', 'chapter', chapter.chapter_page)
 
@@ -46,7 +51,15 @@ def create_app():
         return send_from_directory(os.path.join(app.root_path, 'static'),
         'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
+    @app.after_request
+    def add_csrf_header(response):
+        csrf_token = secrets.token_hex(16)
+        response.set_cookie('csrf_token', csrf_token)
+        response.headers['X-CSRF-Token'] = csrf_token
+        return response
+
     return app
+
 
 app = create_app()
 
