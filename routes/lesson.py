@@ -1,30 +1,33 @@
-from flask import render_template, redirect, url_for, session
-from models.models import User
+from flask import render_template, redirect, url_for, session, flash
+from models.models import User, Course
+from .helpers import *
 from models.database import db
 
-def lessons_page():
+def lessons_page(course_id):
+    # Authentication check
     if 'user_id' not in session:
         return redirect(url_for('login'))
+
     user = db.session.get(User, session['user_id'])
     if user is None:
-        session.pop('user_id', None)
+        session.clear()
         return redirect(url_for('login'))
+
+    # Check if user has selected a level
     if not user.level:
         return redirect(url_for('select_level'))
-    lessons = [
-        {'id': 1, 'title': 'Introduction to Python'},
-        {'id': 2, 'title': 'Variables and Data Types'},
-        {'id': 3, 'title': 'Operators & Expressions'},
-        {'id': 4, 'title': 'Conditional Statements'},
-        {'id': 5, 'title': 'Loops in Python'},
-        {'id': 6, 'title': 'Functions'},
-        {'id': 7, 'title': 'Lists, Tuples, and Dictionaries'},
-        {'id': 8, 'title': 'File Handling in Python'},
-        {'id': 9, 'title': 'Exception Handling'},
-        {'id': 10, 'title': 'Python Classes and Objects'},
-        {'id': 11, 'title': 'Python Iterators'},
-        {'id': 12, 'title': 'Inheritance'},
-        {'id': 13, 'title': 'Polymorphism'},
-        {'id': 14, 'title': 'Encapsulation'}
-    ]
-    return render_template('lessons.html', user=user, lessons=lessons)
+
+    # Verify the course exists
+    course = db.session.get(Course, course_id)
+    if not course:
+        flash('Course not found', 'error')
+        return redirect(url_for('courses_page'))
+
+    # Update session with current course
+    session['current_course_id'] = course_id
+
+    lessons = get_course_lessons(course_id)
+
+    completed_lessons_list = get_completed_chapters(user.id, session['current_course_id'])
+
+    return render_template('lessons.html', user=user, lessons=lessons, completed_lessons_list=completed_lessons_list)

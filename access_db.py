@@ -1,15 +1,15 @@
-from app import app,db, User  # Import from your app.py
+from app import app,db, user  # Import from your app.py
 
 with app.app_context():  # Needed for Flask-SQLAlchemy to work outside the app
     # Print all users
-    users = User.query.all()
-    for user in users:
-        print(f"ID: {user.id}")
-        print(f"Username: {user.username}")
-        print(f"Password: {user.password}")
-        print(f"Points: {user.points}")
-        print(f"Course: {user.course}")
-        print(f"Completed Lessons: {user.completed_lessons}")
+    users = user.query.all()
+    for u in users:
+        print(f"ID: {u.id}")
+        print(f"Username: {u.username}")
+        print(f"Password: {u.password}")
+        print(f"Points: {u.points}")
+        print(f"Course: {u.course}")
+        print(f"Completed Lessons: {u.completed_lessons}")
         print("---")
 
     # Example: Add a test user (optional)

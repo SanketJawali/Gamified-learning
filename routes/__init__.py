@@ -1,7 +1,7 @@
 from .home import home_page
-from .admin import admin_courses_page
+from .admin import admin_courses_page, delete_course
 from .auth_routes import register_page, login_page, logout_page
-from .course import courses_page,select_course_page
+from .course import courses_page,select_course_page, get_course_image
 from .lesson import lessons_page
 from .quiz import quiz_page, quiz_ans_page
 from .user import profile_page
@@ -9,6 +9,8 @@ from .chapter import chapter_page
 
 def init_admin(app):
     app.add_url_rule('/admin_courses', 'admin_courses', admin_courses_page, methods=['GET', 'POST'])
+    app.add_url_rule('/admin/delete_course', 'admin_delete', delete_course, methods=['DELETE'])
+    app.add_url_rule('/admin/image', 'course_image', get_course_image, methods=['POST'])
 
 def init_auth_routes(app):
     app.add_url_rule('/register', 'register', register_page, methods=['GET', 'POST'])
@@ -18,6 +20,7 @@ def init_auth_routes(app):
 def init_course(app):
     app.add_url_rule('/courses', 'courses', courses_page, methods=['GET'])
     app.add_url_rule('/select_course', 'select_course',select_course_page, methods=['POST'])
+    app.add_url_rule('/course/<int:course_id>/image', 'get_course_image', get_course_image)
 
 def init_chapter(app):
     app.add_url_rule('/chapter', 'chapter', chapter_page, method=['GET','POST'])

@@ -11,18 +11,14 @@ def init_db(app):
             admin = User(
                 name='Sanket',
                 username='Sanket',
-                email='jadhavdamodar027@gmail.com',
+                email='sanketjawali25@gmail.com',
                 stream='Engineering',  # Updated
                 year='4th Year',
                 password='admin123',
                 is_admin=True,
-                level='Advanced'
+                level='1'
             )
             db.session.add(admin)
             db.session.commit()
 
-        # Add default course if none exist
-        if not Course.query.first():
-            default_course = Course(name='Python', image='python_logo.png')
-            db.session.add(default_course)
-            db.session.commit()
+

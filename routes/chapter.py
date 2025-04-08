@@ -11,8 +11,7 @@ def chapter_page(chapter_id):
         session.pop('user_id', None)
         return redirect(url_for('login'))
     # Get chapter content
-    filename = f"chapter_{chapter_id}.md"
-    md = get_chapter_content(filename)
+    md = get_chapter_content(session['course_id'], chapter_id)
 
     # Convert markdown to html
     content = markdown_to_html(md)
