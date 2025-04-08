@@ -26,13 +26,15 @@ def create_app():
 
     app.add_url_rule('/select_course', 'select_course', course.select_course_page, methods=['POST'])
 
+    app.add_url_rule('/set_currect_course_session', 'set_current_course_session', course.set_current_course_session, methods=['POST'])
+
     app.add_url_rule('/admin/image/<int:course_id>', 'course_image', admin. get_course_image)
 
     app.add_url_rule('/admin_courses', 'admin_courses', admin.admin_courses_page, methods=['GET', 'POST'])
 
     app.add_url_rule('/admin/delete_course/<int:course_id>', 'admin_delete', admin.delete_course, methods=['DELETE'])
 
-    app.add_url_rule('/lessons/<int:course_id>', 'lessons', lesson.lessons_page)
+    app.add_url_rule('/lessons>', 'lessons', lesson.lessons_page)
 
     app.add_url_rule('/chapter/<int:chapter_id>', 'chapter', chapter.chapter_page)
 

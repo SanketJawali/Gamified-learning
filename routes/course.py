@@ -55,3 +55,19 @@ def select_course_page():
         'redirect': url_for('lessons', course_id=course.id, _external=True)
     })
 
+def set_current_course_session():
+    if 'user_id' not in session:
+        flash('Please login first', 'error')
+        return redirect(url_for('login'))
+    
+    course_id = request.form.get('course_id')
+    course = db.session.get(Course, course_id)
+    
+    if not course:
+        flash('Course not found', 'error')
+        return redirect(url_for('courses_page'))
+    
+    # Set session and redirect
+    session['current_course_id'] = course.id
+    session['current_course_name'] = course.name
+    return redirect(url_for('lessons', course_id=course.id))
