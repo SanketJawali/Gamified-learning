@@ -29,14 +29,14 @@
                     {{ course.description or 'Learn ' + course.name + ' from
                     basics to advanced concepts.' }}
                 </p>
-                {% if user.course == course.name %}
+                {% if course in user.courses %}
                 <!-- If user is enrolled, redirect to lessons -->
-                <a
-                    href="{{ url_for('lessons') }}"
-                    class="btn bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700"
-                >
-                    Go to Lessons
-                </a>
+                <form action="{{ url_for('set_current_course_session') }}" method="POST" class="inline">
+                    <input type="hidden" name="course_id" value="{{ course.id }}">
+                    <button type="submit" class="btn bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700">
+                        Go to Lessons
+                    </button>
+                </form>
                 {% else %}
                 <!-- If not enrolled, allow enrollment -->
                 <button
