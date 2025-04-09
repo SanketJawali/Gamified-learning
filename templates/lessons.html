@@ -21,171 +21,72 @@
             x-transition.leave.delay.300ms=""
             >
             <ul class="timeline timeline-vertical text-xl mt-5 mb-5">
+                <!-- Start of Course -->
                 <li>
                     <div class="timeline-start timeline-box text-xl bg-blue-400">
                         <img src="/static/star.png" class="size-6" alt="star" x-show="chapterOpen">
                         <p x-show="!chapterOpen">Started Course</p>
                     </div>
                     <div class="timeline-middle">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            class="text-primary h-5 w-5"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                clip-rule="evenodd"
-                            />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-primary h-5 w-5">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
                         </svg>
                     </div>
                     <hr class="bg-primary" />
                 </li>
-
-                {% for lesson in lessons %} {% if loop.index is odd %}
-                <li name="right">
-                    <hr
-                        {%
-                        if
-                        loop.index|string
-                        in
-                        completed_lessons_list
-                        %}
-                        class="bg-primary"
-                        {%
-                        endif
-                        %}
-                    />
-                    <div class="timeline-middle">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            class="{% if loop.index|string in completed_lessons_list %} text-primary {% endif %} h-5 w-5"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </div>
-                    <div
-                        class="timeline-end timeline-box transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg {% if loop.index|string in completed_lessons_list %}bg-green-300{% endif %}"
-                    >
-                        <button
-                            hx-get="/chapter/{{loop.index}}"
-                            hx-target="#chapter"
-                            hx-swap="innerHTML"
-                            x-on:click="chapterOpen = true"
-                            class="text-xl font-thin tabular-nums inline">
-
-                            <p class="text-left font-bold text-gray-700">{{ loop.index }}. </p>
-                            <p
-                                x-show="!chapterOpen"
-                                class="text-xl"
-                                >{{ lesson.title }}{% if loop.index|string in
-                                completed_lessons_list %}
-                                <span class="checkmark">✓</span>
-                                {% endif %}</p
+            
+                <!-- Lessons Progress -->
+                {% for lesson in lessons %}
+                {% set lesson_completed = lesson.id in completed_chapter_ids %}
+            
+                    <li name="{{ 'right' if loop.index is odd else 'left' }}">
+                        <hr class="{% if lesson_completed %}bg-primary{% endif %}" />
+            
+                        {% if loop.index is odd %}
+                            <div class="timeline-middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="{{ 'text-primary' if lesson_completed else '' }} h-5 w-5">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        {% endif %}
+            
+                        <div class="{{ 'timeline-end' if loop.index is odd else 'timeline-start' }} timeline-box transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg {{ 'bg-green-300' if lesson_completed else '' }}">
+                            <button
+                                hx-get="/chapter/{{ loop.index }}"
+                                hx-target="#chapter"
+                                hx-swap="innerHTML"
+                                x-on:click="chapterOpen = true"
+                                class="text-xl font-thin tabular-nums inline"
                             >
-                        </button>
-                        <div class="list-col-grow"></div>
-                    </div>
-                    <hr
-                        {%
-                        if
-                        loop.index|string
-                        in
-                        completed_lessons_list
-                        %}
-                        class="bg-primary"
-                        {%
-                        endif
-                        %}
-                    />
-                </li>
-
-                {% else %}
-
-                <li name="left">
-                    <hr
-                        {%
-                        if
-                        loop.index|string
-                        in
-                        completed_lessons_list
-                        %}
-                        class="bg-primary"
-                        {%
-                        endif
-                        %}
-                    />
-                    <div
-                        class="timeline-start timeline-box transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg {% if loop.index|string in completed_lessons_list %}bg-green-300{% endif %}"
-                    >
-                        <button
-                            hx-get="/chapter/{{loop.index}}"
-                            hx-target="#chapter" 
-                            hx-swap="innerHTML"
-                            x-on:click="chapterOpen = true"
-                            class="text-xl font-thin tabular-nums inline">
-                            <p class="text-left font-bold text-gray-700">{{ loop.index }}. </p>
-                            <p
-                                x-show="!chapterOpen"
-                                class="text-xl"
-                                >{{ lesson.title }}{% if loop.index|string in
-                                completed_lessons_list %}
-                                <span class="checkmark">✓</span>
-                                {% endif %}</p
-                            >
-                        </button>
-                        <div class="list-col-grow"></div>
-                    </div>
-                    <div class="timeline-middle">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            class="{% if loop.index|string in completed_lessons_list %} text-primary {% endif %} h-5 w-5"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </div>
-                    <hr
-                        {%
-                        if
-                        loop.index|string
-                        in
-                        completed_lessons_list
-                        %}
-                        class="bg-primary"
-                        {%
-                        endif
-                        %}
-                    />
-                </li>
-                {% endif %} {% endfor %}
-
+                                <p class="text-left font-bold text-gray-700">{{ loop.index }}.</p>
+                                <p x-show="!chapterOpen" class="text-xl">
+                                    {{ lesson.title }}
+                                    {% if lesson_completed %}
+                                        <span class="checkmark">✓</span>
+                                    {% endif %}
+                                </p>
+                            </button>
+                            <div class="list-col-grow"></div>
+                        </div>
+            
+                        {% if loop.index is even %}
+                            <div class="timeline-middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="{{ 'text-primary' if lesson_completed else '' }} h-5 w-5">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        {% endif %}
+            
+                        <hr class="{% if lesson_completed %}bg-primary{% endif %}" />
+                    </li>
+                {% endfor %}
+            
+                <!-- End of Course -->
                 <li>
                     <hr />
                     <div class="timeline-middle">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            class="h-5 w-5"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                clip-rule="evenodd"
-                            />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
                         </svg>
                     </div>
                     <div class="timeline-end timeline-box text-xl bg-yellow-300">
@@ -194,6 +95,7 @@
                     </div>
                 </li>
             </ul>
+            
         </div>
     </div>
 </div>

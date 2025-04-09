@@ -1,47 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, abort
-import re
-from models.models import User, Course
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+import json
+from models.models import User, Chapter, UserChapterProgress
+from datetime import datetime
 from models.database import db
-from routes.helpers import get_quiz, get_quiz_answers
+from routes.helpers import get_chapter_content,get_quiz_answers
+from quiz_generator import generate_quiz
 
 def quiz_page(quiz_id):
     if 'user_id' not in session:
-            return redirect(url_for('login'))
-    user = db.session.get(User, session['user_id'])
-    if user is None:
-        session.pop('user_id', None)
-        return redirect(url_for('login'))
-    if not user.level:
-        return redirect(url_for('quiz'))
-
-    if request.method == 'POST':
-        # Load the quiz answers
-        answer_filename = f"answer_{quiz_id}"
-        answer_data = get_quiz_answers(answer_filename)
-        if not answer_data:
-            abort(404, description="Answer key not found")
-
-
-    # Handle Get request
-    filename = f"quiz_{quiz_id}"
-    quiz_data = get_quiz(filename)
-
-    if not quiz_data:
-        abort(404, description="Quiz not found")
-
-    # Pass the specific parts of quiz_data separately
-    return render_template(
-        'quiz.html',
-        user=user,
-        quiz_id=quiz_id,
-        points=quiz_data.get('points', 0),
-        time_limit=quiz_data.get('time_limit_minutes', 0),
-        questions=quiz_data.get('questions', [])  # Pass just the questions array
-    )
-
-
-def quiz_ans_page(quiz_id):
-    if 'user_id' not in session:
         return redirect(url_for('login'))
     user = db.session.get(User, session['user_id'])
     if user is None:
@@ -50,92 +16,126 @@ def quiz_ans_page(quiz_id):
     if not user.level:
         return redirect(url_for('quiz'))
 
-    # Load quiz and answer data
-    filename = f"quiz_{quiz_id}"
-    quiz_data = get_quiz(filename)
-    if not quiz_data:
-        abort(404, description="Quiz not found")
-
-    answer_filename = f"answer_{quiz_id}"
-    answer_data = get_quiz_answers(answer_filename)
-    if not answer_data:
-        abort(404, description="Answer key not found")
-
-    questions = quiz_data.get('questions', [])
-    answer_key = answer_data.get('answers', {})
-
-    if request.method == 'POST':
-        # Store user's answers in session and calculate score
-        user_answers = {}
-        correct_answers = 0
-        total_questions = len(answer_key)
-
-        for question_id, correct_index in answer_key.items():
-            user_answer = request.form.get(question_id, '').strip()
-            user_answers[question_id] = user_answer
-            try:
-                if int(user_answer) == int(correct_index):
-                    correct_answers += 1
-            except (ValueError, TypeError):
-                continue
-
-        # Check if lesson was already completed
-        completed_lessons = user.completed_lessons.split(',') if user.completed_lessons else []
-        is_lesson_completed = str(quiz_id) in completed_lessons
-
-        # Calculate results
-        score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
-        xp_earned = correct_answers * answer_data['xp_per_question'] if not is_lesson_completed else 0
-
-        # Update user's progress
+    # Handle GET request: Generate quiz and redirect to quiz.html
+    if request.method == 'GET':
         try:
-            if not is_lesson_completed and score >= 40:
-                # First time passing - award points and mark completed
-                user.points += xp_earned
-                completed_lessons.append(str(quiz_id))
-                user.completed_lessons = ','.join(completed_lessons)
-                flash(f'Congratulations! You earned {xp_earned} points for completing this lesson!', 'success')
-            elif is_lesson_completed:
-                flash('You have already completed this lesson. No additional points awarded.', 'info')
-            else:
-                flash(f'You scored {score:.1f}%. Try again to pass and earn points!', 'warning')
+            # Get chapter content
 
-            db.session.commit()
+            # Get course_id from session
+            course_id = session['current_course_id']
+            content = get_chapter_content(course_id, quiz_id)['content']
+            quiz = generate_quiz(content)
+            
+            # Enhanced validation
+            if not quiz:
+                raise ValueError("Quiz generation failed")
+            if not isinstance(quiz, dict):
+                raise ValueError("Invalid quiz format")
+            if 'questions' not in quiz:
+                raise ValueError("No questions found in quiz")
+            questions = quiz.get('questions', [])
+            if not isinstance(questions, list) or len(questions) != 8:
+                raise ValueError(f"Expected 8 questions, got {len(questions)}")
+
+            # Validate each question's structure
+            for i, question in enumerate(questions):
+                if not all(key in question for key in ['Question', 'Options', 'Answer']):
+                    raise ValueError(f"Missing required fields in question {i}")
+                if not isinstance(question['Options'], list) or len(question['Options']) != 4:
+                    raise ValueError(f"Invalid options in Question {i}")
+            
+            # Store quiz and answer key in session
+            session['quiz'] = quiz
+            answer_key = {f"question_{idx+1}": q["Answer"] for idx, q in enumerate(quiz["questions"])}
+            session['answers'] = answer_key
+            
+            return render_template('quiz.html', user=user, quiz=quiz, quiz_id=quiz_id)
+        
         except Exception as e:
-            db.session.rollback()
-            # current_app.logger.error(f"Failed to update user progress: {e}")
-            flash('Error saving your results. Please try again.', 'error')
+            print(f"Error in quiz generation: {str(e)}")
+            return render_template('error.html', message=f"Error generating quiz: {str(e)}"), 500
 
-        # Check for level up
-        if user.check_level_up():
-            db.session.commit()  # If you're not committing elsewhere
-            flash(f'Level Up! You are now Level {user.level}!', 'success')
-
-        # Storing the level and points in session
-        session['user_level'] = user.level
-        session['user_points'] = user.points
-        session['user_answers'] = user_answers  # Store user answers in session
-        session['answer_key'] = answer_key      # Store correct answers in session
-        session['questions'] = questions
-
-    # Retrieve data from session
-        user_answers = session.get('user_answers', {})
-        answer_key = session.get('answer_key', {})
-        questions = session.get('questions', [])
-
-        if not user_answers or not answer_key or not questions:
-            flash('Quiz data not found. Please retake the quiz.', 'error')
+    # Handle POST request: Check answers and render quiz_ans.html
+    elif request.method == 'POST':
+        if 'quiz' not in session or 'answers' not in session:
+            flash("Quiz session expired. Please restart the quiz.", "error")
             return redirect(url_for('quiz', quiz_id=quiz_id))
+        
+        quiz = session['quiz']
+        answers = session['answers']
+        # print(answers)
+        
+        user_answers = {}
+        # Collect user answers from the form for all 8 questions
+        for i in range(1, 9):  # 8 questions
+            user_answer = request.form.get(f'question_q{i}')
+            if user_answer is not None:
+                try:
+                    user_answers[f'question_{i}'] = int(user_answer)  # Convert to index (0, 1, 2, 3)
+                except ValueError:
+                    user_answers[f'question_{i}'] = -1  # Invalid input
+        # print(user_answers)
+        
+        # Compare with correct answers and calculate score for all 8 questions
+        score = 0
+        results = {}
+        for q in range(1, 9):  # Loop over all 8 questions
+            user_ans = user_answers.get(f'question_{q}')
+            # qid = question_id.get(f'question_{q}')
+            correct_ans = answers.get(f'question_{q}')
+            is_correct = (user_ans == correct_ans if user_ans is not None else False)
+            results[f'question_{q}'] = {
+                'user_answer': user_ans,
+                'correct_answer': correct_ans,
+                'is_correct': is_correct
+            }
+            if is_correct and user_ans is not None:
+                score += 1
+        earned_points = score * 10
+        user.points += earned_points
+        
+        # Optionally: Check level up after updating points
+        leveled_up = user.check_level_up()
+
+        # Add completed lesson
+        # Assuming `chapter_id` or `quiz_id` corresponds to a chapter
+        chapter = Chapter.query.filter_by(id=quiz_id).first()  # or use `chapter_id` if named differently
+
+        if chapter:
+            # Check if progress already exists
+            progress = UserChapterProgress.query.filter_by(user_id=user.id, chapter_id=chapter.id).first()
+            
+            if not progress:
+                progress = UserChapterProgress(
+                    user_id=user.id,
+                    chapter_id=chapter.id,
+                    completed=True,
+                    completed_at=datetime.utcnow(),
+                    score=earned_points
+                )
+                db.session.add(progress)
+            else:
+                # Update existing record if it exists
+                progress.completed = True
+                progress.completed_at = datetime.utcnow()
+                progress.score = earned_points
+
+
+        db.session.commit()
+
+        flash(f"Your answred: {score} out of 8 correctly You Got {score*10} Points", "success")
+        if(leveled_up):
+            flash("Congratulations! You Leveled Up !!!", "success")
 
         return render_template(
             'quiz_ans.html',
             user=user,
-            quiz_id=quiz_id,
-            points=0,  # Adjust as needed
-            time_limit=5,  # Adjust as needed
-            questions=questions,
+            quiz=quiz,
+            points=score*10,  # Adjust as needed based on your logic
+            time_limit=5,  # Adjust as needed based on your logic
+            questions=quiz['questions'],  # Pass the questions list
             user_answers=user_answers,
-            answer_key=answer_key,
+            answer_key=answers,  # Pass the correct answers
+            results=results,  # Pass results for color coding
             submitted=True
-            )
-    return redirect(url_for('quiz', quiz_id=quiz_id))
+        )

@@ -52,8 +52,8 @@
                     Completed Lessons
                 </h3>
                 <p class="text-lg font-bold text-gray-800">
-                    {% if user.completed_lessons %} {{
-                    user.completed_lessons.split(',')|length }} {% else %} 0 {%
+                    {% if user.completed_chapters %} {{
+                    user.completed_chapters|length }} {% else %} 0 {%
                     endif %}
                 </p>
             </div>
@@ -64,12 +64,11 @@
                 <div class="flex justify-center mb-2"></div>
                 <div
                     class="radial-progress text-primary"
-                    style="--value: {{ (user.completed_lessons.split(',')|length / 14 * 100) if user.completed_lessons else 0 }}"
-                    aria-valuenow="10"
+                    style="--value: {{ (user.completed_chapters|length / number_chapters * 100) if user.completed_chapters else 0 }}"
                     role="progressbar"
                 >
-                    {{ (user.completed_lessons.split(',')|length / 14 * 100)|int
-                    if user.completed_lessons else 0 }}%
+                    {{ (user.completed_chapters|length / number_chapters * 100)|int
+                    if user.completed_chapters else 0 }}%
                 </div>
             </div>
 

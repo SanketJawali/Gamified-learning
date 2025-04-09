@@ -11,10 +11,6 @@ def chapter_page(chapter_id):
         session.pop('user_id', None)
         return redirect(url_for('login'))
 
-    # Get course_id from session
-    course_id = session['current_course_id']
-    print(course_id)
-
     # Get chapter content
     chapter = get_chapter_content(session['current_course_id'], chapter_id)
 
