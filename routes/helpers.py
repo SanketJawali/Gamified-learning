@@ -6,6 +6,7 @@ from flask import current_app, send_from_directory
 from models.database import db
 import os
 from werkzeug.exceptions import NotFound
+from models import Achievement
 
 def get_course_lessons(course_id):
     """
@@ -244,3 +245,7 @@ def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def get_achievement_by_code(code):
+    """Get achievement by code - used in templates"""
+    return Achievement.query.filter_by(code=code).first()
