@@ -2,6 +2,7 @@ from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from models import init_db, db
 from routes import *
+from routes.helpers import *
 import os
 import re
 import secrets
@@ -13,6 +14,9 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = 'mysecret123'
 
+    app.jinja_env.globals.update(chr=chr)
+    app.jinja_env.globals.update(get_achievement_by_code=get_achievement_by_code)
+
     init_db(app)
 
     # Routes
@@ -23,6 +27,8 @@ def create_app():
     app.add_url_rule('/login', 'login', auth_routes.login_page, methods=['GET', 'POST'])
 
     app.add_url_rule('/courses', 'courses', course.courses_page)
+
+    app.add_url_rule('/achievements','achievements',user.achievements_page,methods=['POST','GET'])
 
     app.add_url_rule('/select_course', 'select_course', course.select_course_page, methods=['POST'])
 

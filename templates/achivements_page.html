@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8 text-center">Your Achievements</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for achievement in all_achievements %}
+            <div class="bg-base-200 rounded-lg p-6 flex flex-col items-center 
+                      {{ 'opacity-100' if achievement.id in earned_ids else 'opacity-50' }}">
+                
+                <div class="w-24 h-24 mb-4 rounded-full flex items-center justify-center overflow-hidden
+                          {{ 'bg-primary' if achievement.id in earned_ids else 'bg-neutral' }}">
+                    {% if achievement.id in earned_ids %}
+                        <img src="{{ url_for('static', filename='badges/' + achievement.badge_image) }}" 
+                             alt="{{ achievement.name }}" class="w-16 h-16">
+                    {% else %}
+                        <span class="text-3xl">?</span>
+                    {% endif %}
+                </div>
+                
+                <h3 class="text-xl font-bold mb-2">{{ achievement.name }}</h3>
+                <p class="text-center text-base-content/80 mb-3">{{ achievement.description }}</p>
+                
+                {% if achievement.id in earned_ids %}
+                    <span class="badge badge-success">Earned</span>
+                {% else %}
+                    <span class="badge badge-outline">Locked</span>
+                {% endif %}
+                
+                <div class="mt-2 text-sm">+{{ achievement.points }} points</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

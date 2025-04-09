@@ -114,3 +114,20 @@ class UserChapterProgress(db.Model):
     __table_args__ = (
         db.UniqueConstraint('user_id', 'chapter_id', name='_user_chapter_uc'),
     )
+
+class Achievement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    badge_image = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    points = db.Column(db.Integer, default=10)
+    
+class UserAchievement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    achievement_id = db.Column(db.Integer, db.ForeignKey('achievement.id'), nullable=False)
+    date_earned = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    achievement = db.relationship('Achievement')
