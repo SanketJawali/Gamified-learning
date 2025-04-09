@@ -3,9 +3,10 @@ from .admin import admin_courses_page, delete_course
 from .auth_routes import register_page, login_page, logout_page
 from .course import courses_page,select_course_page, set_current_course_session
 from .lesson import lessons_page
-from .quiz import quiz_page, quiz_ans_page
+from .quiz import quiz_page
 from .user import profile_page
 from .chapter import chapter_page
+from .code import code_page
 
 def init_admin(app):
     app.add_url_rule('/admin_courses', 'admin_courses', admin_courses_page, methods=['GET', 'POST'])
@@ -32,7 +33,9 @@ def init_home(app):
 
 def init_quiz(app):
     app.add_url_rule('/quiz', 'quiz', quiz_page, methods=['GET', 'POST'])
-    app.add_url_rule('/quiz_ans', 'quiz_ans', quiz_ans_page, methods=['GET'])
 
 def init_user(app):
     app.add_url_rule('/profile', 'profile', profile_page)
+
+def init_code(app):
+    app.add_url_rule('/code', 'code', code_page)

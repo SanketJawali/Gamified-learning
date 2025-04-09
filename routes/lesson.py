@@ -28,6 +28,8 @@ def lessons_page():
 
     lessons = get_course_lessons(course_id)
 
-    completed_lessons_list = get_completed_chapters(user.id, session['current_course_id'])
+    completed_lessons_list = get_completed_chapters(user.id, session['current_course_id'])['completed_chapters']
+    completed_chapter_ids = {lesson['chapter_id'] for lesson in completed_lessons_list}
+    print(completed_chapter_ids)
 
-    return render_template('lessons.html', user=user, lessons=lessons, completed_lessons_list=completed_lessons_list)
+    return render_template('lessons.html', user=user, lessons=lessons, completed_chapter_ids=completed_chapter_ids)

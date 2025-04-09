@@ -35,11 +35,11 @@
                 {% if 'user_id' in session %}
                 <div class="flex gap-2 pr-5">
                     <p class="pt-2" style="height: min-content">
-                        Level: {{ session.get('user_level', 1) }}
+                        Level: {{ user.level }}
                     </p>
                     <progress
                         class="progress progress-accent w-56 h-3 mt-4"
-                        value="{{ session.get('user_points', 0) }}"
+                        value="{{ user.points }}"
                         max="200"
                     ></progress>
                     <div class="dropdown dropdown-end">
@@ -72,6 +72,11 @@
                                     href="{{ url_for('courses') }}"
                                     class="text-lg"
                                     >Courses</a
+                                >
+                                <a 
+                                    href="{{ url_for('code') }}"
+                                    class="text-lg"
+                                    >Code Playground</a
                                 >
                                 <a
                                     href="{{ url_for('logout') }}"

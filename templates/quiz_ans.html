@@ -1,95 +1,105 @@
 {% extends "base.html" %} {% block content %} {% with messages =
-get_flashed_messages(with_categories=true) %} {% if messages %} {% for
-category,message in messages %}
-<div
-    role="alert"
-    class="alert alert-{{ category }} max-w-md mx-auto z-20 mt-5 flex "
->
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 shrink-0 stroke-current"
-        fill="none"
-        viewBox="0 0 24 24"
+    get_flashed_messages(with_categories=true) %} {% if messages %} {% for
+    category,message in messages %}
+    <div
+        role="alert"
+        class="alert alert-{{ category }} max-w-md mx-auto z-20 mt-5 flex "
     >
-        <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-    </svg>
-    <span>{{ message }}</span>
-</div>
-{% endfor %} {% endif %} {% endwith %}
-
-<a href="{{ url_for('lessons',lesson_id=lession_id) }}">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+        </svg>
+        <span>{{ message }}</span>
+    </div>
+    
+    {% endfor %} {% endif %} {% endwith %}
+    
+    
     <div
         class="flex items-center justify-center gap-2 w-60 m-4 btn btn-soft btn-primary"
     >
-        Back to Lesson
-        <img src="/static/arrow_b.png" alt="back" class="size-6" />
+
+
+        <img src="/static/arrow_b.png" alt="back" class="size-6">
+        <a href="{{ url_for('lessons') }}">Back to Lessons</a>
     </div>
-</a>
-
-<div
-    class="flex flex-col min-h-[200px] p-3"
-    style="position: absolute; left: 50%; transform: translate(-50%, 0)"
->
-    <div>
-        <h2 class="card-title text-2xl">Quiz: {{ quiz_id }}</h2>
-        <div class="p-4">
-            <ul class="space-y-6">
-                {% for q in questions %}
-                <li>
-                    <div class="card bg-base-100 shadow-lg">
-                        <div class="card-body">
-                            <span class="card-title text-lg">
-                                Question {{ loop.index }}: {{ q.text |
-                                replace('\n', '<br />') | safe}}
-                            </span>
-                            <hr class="my-2" />
-                            <div class="space-y-2">
-                                {% for option in q.options %}
-
-                                <div
-                                    class="flex items-center gap-2 {% if submitted %} {% set is_correct = (loop.index0 == answer_key[q.id]|int) %} {% set user_answer = user_answers[q.id]|int if user_answers[q.id] else -1 %} {% set is_user_answer = (loop.index0 == user_answer) %} {% if is_correct %} bg-green-200 {% elif is_user_answer and not is_correct %} bg-red-200 {% endif %} {% endif %}"
-                                >
-                                    <input
-                                        class="size-4"
-                                        type="radio"
-                                        name="{{ q.id }}"
-                                        value="{{ loop.index0 }}"
-                                        id="{{ q.id }}_{{ loop.index }}"
-                                        required
-                                    />
-                                    <label
-                                        for="{{ q.id }}_{{ loop.index }}"
-                                        class="text-base cursor-pointer"
-                                    >
-                                        {{ option | replace('\n', '<br />') |
-                                        safe }}
-                                    </label>
+    
+    
+    <div
+        class="flex flex-col min-h-[200px] p-3"
+        style="position: absolute; left: 50%; transform: translate(-50%, 0)"
+    >
+        <div>
+            <h2 class="card-title text-2xl">Quiz: {{ quiz_id }}</h2>
+                <div class="p-4">
+                    <ul class="space-y-6">
+                        {% for q in quiz.questions %}
+                        {% set question_index = loop.index %}
+            {% set question_key = 'question_' ~ question_index %}
+                        <li>
+                            <div class="card bg-base-100 shadow-lg">
+                                <div class="card-body">
+                                    <span class="card-title text-lg">
+                                        Q{{ q.Question}}
+                                    </span>
+                                    <hr class=" my-2" />
+                                    <div class="space-y-2">
+                                                            {% for i in range(4) %}
+                                        {% set is_correct_answer = (i == q.Answer) %}
+                                        {% set is_user_answer = false %}
+                                        {% if user_answers is defined and question_key in user_answers %}
+                                            {% set is_user_answer = (i == user_answers[question_key]) %}
+                                        {% endif %}
+                                        
+                                        <div class="flex items-center gap-2 p-2 rounded-md
+                                            {% if is_correct_answer %}
+                                            bg-green-200
+                                            {% elif is_user_answer and not is_correct_answer %}
+                                            bg-red-200
+                                            {% endif %}
+                                        ">
+                                            <input class="size-4"
+                                            type="radio"
+                                            name="question_q{{ question_index }}"
+                                            value="{{ i }}"
+                                            id="question_{{ question_index }}_{{ i }}"
+                                            {% if is_user_answer %}checked{% endif %}
+                                            disabled
+                                            />
+                                            <label for="question_{{ question_index }}_{{ i }}" class="text-base cursor-pointer">
+                                            {{ q.Options[i] }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                                {% endfor %}
                             </div>
-                        </div>
+                        </li>
+                        {% if not loop.last %}
+                        <hr class="my-4" />
+                        {% endif %} {% endfor %}
+                    </ul>
+    
+                    <!-- Properly placed submit button -->
+                    <div class="flex justify-center mt-8 mb-4">
+                        <button
+                            type="submit"
+                            class="btn bg-indigo-500 hover:bg-indigo-700 w-full max-w-xs"
+                        >
+                        <a href="{{ url_for('lessons') }}">Next lesson</a>
+                        </button>
                     </div>
-                </li>
-                {% if not loop.last %}
-                <hr class="my-4" />
-                {% endif %} {% endfor %}
-            </ul>
-
-            <!-- Properly placed submit button -->
-            <div class="flex justify-center mt-8 mb-4">
-                <a
-                    class="btn bg-indigo-500 hover:bg-indigo-700 w-full max-w-xs"
-                    href="{{ url_for('lessons') }}"
-                    >Next Lesson
-                </a>
-            </div>
+                </div>
         </div>
     </div>
-</div>
-
+    
 {% endblock %}
