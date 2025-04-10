@@ -5,6 +5,7 @@ from models.models import User, Chapter, Course, UserChapterProgress
 from flask import current_app, send_from_directory
 from models.database import db
 import os
+import re
 from werkzeug.exceptions import NotFound
 from models import Achievement
 
@@ -248,3 +249,23 @@ def allowed_file(filename):
 def get_achievement_by_code(code):
     """Get achievement by code - used in templates"""
     return Achievement.query.filter_by(code=code).first()
+
+def clean_markdown_html(html):
+    """Transform raw markdown HTML into a more structured format"""
+    # Convert single-item lists into regular paragraphs
+    html = re.sub(
+        r'<ol>\s*<li>(.*?)</li>\s*</ol>',
+        r'<div class="text-lg">\1</div>',
+        html,
+        flags=re.DOTALL
+    )
+    
+    # Clean up code blocks
+    html = re.sub(
+        r'<div class="codehilite"><pre><span></span><code>(.*?)</code></pre></div>',
+        r'<div class="codehilite"><pre><span></span><code class="text-base">\1</code></pre></div>',
+        html,
+        flags=re.DOTALL
+    )
+    
+    return Markup(html)
