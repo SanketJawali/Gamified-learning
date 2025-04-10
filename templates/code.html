@@ -1,25 +1,40 @@
 <style>
     .editor-container {
-    width: 900px;
-    height: 540px;
     margin: 20px auto;
+    padding: 10px auto;
     position: relative;
+    z-index: 30;
     }
 
     #editor {
-    position: absolute;
-    left: 0;
+    position: relative;
+    left: 50%;
     right: 0;
     top: 0;
     bottom: 0;
-    height: 100%;
-    width: 100%;
+    height: 90%;
+    width: 95%;
     font-size: 20px;
+    transform: translate(-50%, 0%);
     }
 </style>
 
+<link
+            href="https://cdn.jsdelivr.net/npm/daisyui@5"
+            rel="stylesheet"
+            type="text/css"
+        />
+<link rel="stylesheet" href="{{url_for('static',filename='dist/output.css')}}">
+
+<div
+    class="flex items-center justify-center gap-2 w-60 m-4 btn btn-soft btn-primary"
+>
+    <img src="/static/arrow_b.png" alt="back" class="size-6">
+    <a href="{{ url_for('lessons') }}">Back to Lessons</a>
+</div>
+
 <div class="editor-container">
-    <div class="editor"></div>
+    <div id="editor"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.39.1/ace.js"></script>
@@ -28,6 +43,6 @@
 
     ace.edit(editor, {
     theme: "ace/theme/cobalt",
-    mode: "ace/mode/javascript",
+    mode: "ace/mode/python",
     });
 </script>
