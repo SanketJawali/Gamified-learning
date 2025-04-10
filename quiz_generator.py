@@ -29,6 +29,8 @@ def generate_quiz(topic):
       - C. "option answer 3"
       - D. "option answer 4"
     - "Answer": The index of the correct option (0 for A, 1 for B, 2 for C, 3 for D).
+    
+    The questions should be realted to the topic provided above but shouldn't just be theory questions but should test the practical skills of the learner and check their understanding. The questions can conatin markdown formating for code block if any.
 
     Return ONLY a valid JSON object containing an array of 8 question objects. Do not include any additional text, explanations, or formatting outside the JSON structure.
 

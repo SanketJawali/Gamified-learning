@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from models import init_db, db
 from routes import *
 from routes.helpers import *
+import markdown
+from markupsafe import Markup
 import os
 import re
 import secrets
@@ -67,6 +69,12 @@ def create_app():
         response.set_cookie('csrf_token', csrf_token)
         response.headers['X-CSRF-Token'] = csrf_token
         return response
+
+    @app.template_filter('markdown')
+    def markdown_filter(text):
+        extensions = ['fenced_code', 'codehilite', 'tables', 'nl2br']
+        raw_html = markdown.markdown(text, extensions=extensions)
+        return clean_markdown_html(raw_html)
 
     return app
 
