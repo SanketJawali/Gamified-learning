@@ -1,0 +1,57 @@
+<div
+    class="flex flex-col min-h-[200px] p-3"
+    style="position: absolute; left: 50%; transform: translate(-50%, 0)"
+>
+    <div>
+        <h2 class="card-title text-2xl">Quiz: {{ quiz_id }}</h2>
+        <form action="/quiz_logic/{{quiz_id}}" method="post">
+            <div class="p-4">
+                <ul class="space-y-6">
+                    {% for q in quiz['questions'] %}
+                    <li>
+                        <div class="card bg-base-100 shadow-lg">
+                            <div class="card-body">
+                                <span class="card-title text-lg">
+                                    Q {{ q.Question}}
+                                </span>
+                                <hr class=" my-2" />
+                                <div class="space-y-2">
+                                    {% for i in range(4) %}
+                                    <div class="flex items-center gap-2">
+                                        <input class="size-4"
+                                            type="radio"
+                                            name="question_{{ q.Question_id }}"
+                                            value="{{ i }}"
+                                            id="question_{{ q.Question_id }}_{{ i }}  "
+                                            required
+                                        />
+                                        <label
+                                            for="question_{{ q.Question_id }}_{{ i }}"
+                                            class="text-base cursor-pointer"
+                                        >
+                                        {{ q.Options[i] }}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% if not loop.last %}
+                    <hr class="my-4" />
+                    {% endif %} {% endfor %}
+                </ul>
+
+                <!-- Properly placed submit button -->
+                <div class="flex justify-center mt-8 mb-4">
+                    <button
+                        type="submit"
+                        class="btn bg-indigo-500 hover:bg-indigo-700 w-full max-w-xs"
+                    >
+                    Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

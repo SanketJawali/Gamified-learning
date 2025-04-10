@@ -25,16 +25,6 @@
     
     
     <div
-        class="flex items-center justify-center gap-2 w-60 m-4 btn btn-soft btn-primary"
-    >
-
-
-        <img src="/static/arrow_b.png" alt="back" class="size-6">
-        <a href="{{ url_for('lessons') }}">Back to Lessons</a>
-    </div>
-    
-    
-    <div
         class="flex flex-col min-h-[200px] p-3"
         style="position: absolute; left: 50%; transform: translate(-50%, 0)"
     >
@@ -90,14 +80,12 @@
                     </ul>
     
                     <!-- Properly placed submit button -->
-                    <div class="flex justify-center mt-8 mb-4">
-                        <button
-                            type="submit"
-                            class="btn bg-indigo-500 hover:bg-indigo-700 w-full max-w-xs"
-                        >
-                        <a href="{{ url_for('lessons') }}">Next lesson</a>
-                        </button>
-                    </div>
+                    <a class="flex justify-center mt-8 mb-4"
+                    a href="{{ url_for('lessons') }}"
+                    class="btn btn-primary bg-indigo-500 hover:bg-indigo-700 w-full max-w-xs"
+                    >
+                      Next lesson
+                    </a>
                 </div>
         </div>
     </div>

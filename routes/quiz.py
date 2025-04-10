@@ -15,6 +15,18 @@ def quiz_page(quiz_id):
         return redirect(url_for('login'))
     if not user.level:
         return redirect(url_for('quiz'))
+    
+    return render_template('quiz.html', user=user, quiz_id=quiz_id)
+
+def quiz_logic_page(quiz_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    user = db.session.get(User, session['user_id'])
+    if user is None:
+        session.pop('user_id', None)
+        return redirect(url_for('login'))
+    if not user.level:
+        return redirect(url_for('quiz'))
 
     # Handle GET request: Generate quiz and redirect to quiz.html
     if request.method == 'GET':
@@ -49,7 +61,7 @@ def quiz_page(quiz_id):
             answer_key = {f"question_{idx+1}": q["Answer"] for idx, q in enumerate(quiz["questions"])}
             session['answers'] = answer_key
             
-            return render_template('quiz.html', user=user, quiz=quiz, quiz_id=quiz_id)
+            return render_template('quiz_logic.html', user=user, quiz=quiz, quiz_id=quiz_id)
         
         except Exception as e:
             print(f"Error in quiz generation: {str(e)}")
@@ -122,6 +134,9 @@ def quiz_page(quiz_id):
 
 
         db.session.commit()
+
+        # clear session to make sure no re-submissions
+        session.pop('quiz', None)
 
         flash(f"Your answred: {score} out of 8 correctly You Got {score*10} Points", "success")
         if(leveled_up):

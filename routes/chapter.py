@@ -17,7 +17,6 @@ def chapter_page(chapter_id):
     # Get chapter content
     # print(session['current_course_id'])
     chapter = get_chapter_content(session['current_course_id'], chapter_id)
-    print(chapter)
 
     # Convert markdown to html
     content = markdown_to_html(chapter['content'])
