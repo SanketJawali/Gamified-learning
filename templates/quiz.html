@@ -22,67 +22,162 @@
     </div>
     
     {% endfor %} {% endif %} {% endwith %}
-    <div
+    <a
         class="flex items-center justify-center gap-2 w-60 m-4 btn btn-soft btn-primary"
+        href="{{ url_for('lessons') }}"
     >
         <img src="/static/arrow_b.png" alt="back" class="size-6">
-        <a href="{{ url_for('lessons') }}">Back to Lessons</a>
-    </div>
-    <div
-        class="flex flex-col min-h-[200px] p-3"
-        style="position: absolute; left: 50%; transform: translate(-50%, 0)"
-    >
-        <div>
-            <h2 class="card-title text-2xl">Quiz: {{ quiz_id }}</h2>
-            <form action="/quiz/{{quiz_id}}" method="post">
-                <div class="p-4">
-                    <ul class="space-y-6">
-                        {% for q in quiz['questions'] %}
-                        <li>
-                            <div class="card bg-base-100 shadow-lg">
-                                <div class="card-body">
-                                    <span class="card-title text-lg">
-                                        Q {{ q.Question}}
-                                    </span>
-                                    <hr class=" my-2" />
-                                    <div class="space-y-2">
-                                        {% for i in range(4) %}
-                                        <div class="flex items-center gap-2">
-                                            <input class="size-4"
-                                                type="radio"
-                                                name="question_{{ q.Question_id }}"
-                                                value="{{ i }}"
-                                                id="question_{{ q.Question_id }}_{{ i }}  "
-                                                required
-                                            />
-                                            <label
-                                                for="question_{{ q.Question_id }}_{{ i }}"
-                                                class="text-base cursor-pointer"
-                                            >
-                                            {{ q.Options[i] }}
-                                            </label>
-                                        </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        {% if not loop.last %}
-                        <hr class="my-4" />
-                        {% endif %} {% endfor %}
-                    </ul>
+     Back to Lessons</a>
+
+    <div id="quiz-container" hx-get="/quiz_logic/{{ quiz_id }}" hx-swap="innerhtml" hx-trigger="load delay:1s">
+    <style>
+        #quiz-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: white;
+        font-family: 'Arial', sans-serif;
+        }
+        
+        .loading-text {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #333;
+        }
+        
+        .cards-container {
+        position: relative;
+        width: 100px;
+        height: 150px;
+        }
+        
+        .card {
+        position: absolute;
+        width: 80px;
+        height: 120px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        transform-origin: center bottom;
+        border: 1px solid #ddd;
+        }
+        
+        .card::before {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 80px;
+        top: 20px;
+        left: 10px;
+        background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+        border-radius: 4px;
+        }
+        
+        .card:nth-child(1) {
+        animation: shuffle-1 1.5s infinite ease-in-out;
+        z-index: 3;
+        }
+        
+        .card:nth-child(2) {
+        animation: shuffle-2 1.5s infinite ease-in-out;
+        z-index: 2;
+        }
+        
+        .card:nth-child(3) {
+        animation: shuffle-3 1.5s infinite ease-in-out;
+        z-index: 1;
+        }
+        
+        @keyframes shuffle-1 {
+        0%, 100% { transform: translateX(0) rotate(0deg); }
+        33% { transform: translateX(-40px) rotate(-15deg); }
+        66% { transform: translateX(40px) rotate(15deg); }
+        }
+        
+        @keyframes shuffle-2 {
+        0%, 100% { transform: translateX(0) rotate(0deg); }
+        33% { transform: translateX(40px) rotate(15deg); }
+        66% { transform: translateX(-40px) rotate(-15deg); }
+        }
+        
+        @keyframes shuffle-3 {
+        0%, 100% { transform: translateX(0) rotate(0deg); }
+        33% { transform: translateX(-30px) rotate(-10deg); }
+        66% { transform: translateX(30px) rotate(10deg); }
+        }
+        
+        .progress-container {
+        width: 200px;
+        height: 4px;
+        background-color: #ddd;
+        border-radius: 4px;
+        margin-top: 30px;
+        overflow: hidden;
+        }
+        
+        .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+        animation: progress 3s infinite ease-in-out;
+        }
+        
+        @keyframes progress {
+        0% { width: 0%; }
+        50% { width: 70%; }
+        75% { width: 85%; }
+        90% { width: 95%; }
+        100% { width: 100%; }
+        }
+        
+        .dots {
+        display: inline-block;
+        width: 50px;
+        }
+        
+        @keyframes dots {
+        0%, 20% { content: ''; }
+        40% { content: '.'; }
+        60% { content: '..'; }
+        80%, 100% { content: '...'; }
+        }
+        
+        .dots::after {
+        content: '';
+        animation: dots 1.5s infinite;
+        }
+    </style>
+
+    <div class="loading-text">Generating Quiz<span class="dots"></span></div>
     
-                    <!-- Properly placed submit button -->
-                    <div class="flex justify-center mt-8 mb-4">
-                        <button
-                            type="submit"
-                            class="btn bg-indigo-500 hover:bg-indigo-700 w-full max-w-xs"
-                        >
-                        Submit
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
+    <div class="cards-container">
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
     </div>
+    
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+    
+    <script>
+        // This keeps the animation running until your backend has completed
+        // In a real implementation, you would replace this with your actual loading logic
+        
+        // Simulated loading time (5 seconds)
+        setTimeout(() => {
+        // This function would be called when your quiz is ready
+        console.log("Quiz generation complete!");
+        
+        // Uncomment the line below if you want to redirect after loading
+        // window.location.href = "your-quiz-page.html";
+        }, 2000);
+    </script>
+    </div>
+
 {% endblock %}
+  

@@ -46,6 +46,8 @@ def create_app():
 
     app.add_url_rule('/quiz/<int:quiz_id>', 'quiz', quiz.quiz_page, methods=['GET', 'POST'])
 
+    app.add_url_rule('/quiz_logic/<int:quiz_id>', 'quiz_logic', quiz.quiz_logic_page, methods=['GET', 'POST'])
+
     app.add_url_rule('/profile', 'profile', user.profile_page)
 
     app.add_url_rule('/contact_support', 'contact_support', user.contact_support_page)
