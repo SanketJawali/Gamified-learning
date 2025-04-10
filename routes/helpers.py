@@ -71,25 +71,25 @@ def markdown_to_html(markdown_text):
     )
     return Markup(html)
 
-def get_chapter_content(course_id, chapter_id):
+def get_chapter_content(course_id, chapter_order):
     """
     Retrieve chapter content for a specific chapter in a course
     
     Args:
         course_id (int): ID of the course
-        chapter_id (int): ID of the chapter
+        chapter_order (int): The order/sequence number of the chapter within the course
     
     Returns:
         dict: Chapter details including title and content if found
         None: If chapter doesn't exist or doesn't belong to the course
     """
     try:
-        # First verify the chapter belongs to the specified course
+        # Get the first chapter matching both course_id and order
         chapter = Chapter.query.filter_by(
-            id=chapter_id,
-            course_id=course_id
-        ).first()
-        
+            course_id=course_id,
+            order=chapter_order
+        ).first()  # Note: using .first() here
+
         if chapter:
             return {
                 'id': chapter.id,
@@ -101,7 +101,6 @@ def get_chapter_content(course_id, chapter_id):
         return None
         
     except Exception as e:
-        # Log the error in a real application
         print(f"Error fetching chapter content: {str(e)}")
         return None
 
