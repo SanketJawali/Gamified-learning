@@ -135,13 +135,11 @@
                         {% endif %} {% endfor %}
                     </ul>
     
-                    <!-- Properly placed submit button -->
-                    <a class="flex justify-center mt-8 mb-4"
-                    a href="{{ url_for('lessons') }}"
-                    class="btn btn-primary bg-indigo-500 hover:bg-indigo-700 w-full max-w-xs"
-                    >
-                      Next lesson
-                    </a>
+                    <div class="mt-4 flex justify-center p-2">
+                        <a href="{{ url_for('lessons') }}" class="btn btn-primary w-50"
+                            >Next Lesson</a
+                        >
+                    </div>
                 </div>
         </div>
     </div>
