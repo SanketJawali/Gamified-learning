@@ -18,20 +18,22 @@ wget https://github.com/SanketJawali/Gamified-learning/archive/refs/heads/main.z
 unzip main.zip
 
 cd Gamified-learning-main/
+
+# OR
+
+git clone https://github.com/SanketJawali/Gamified-learning/archive/refs/heads/main.zip
 ```
 
  **Install Dependencies:**
 ```bash
-# Activate it (Linux/Mac)
-source venv/bin/activate
-
-# Activate it (Windows)
-venv\Scripts\activate
-
 pip install -r requirements.txt
 ```
 
 **Run:**
 ```bash
+flask run
+
+# OR
+
 python app.py
 ```
