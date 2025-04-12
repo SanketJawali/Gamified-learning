@@ -1,5 +1,5 @@
 # Gamified Learning Platform
-
+![image](static/Gamified%20Learning.png)
 ## Introduction
 **Gamified Learning** is a platform where you can learning to code in a game like environment which keeps you engaged and wanting to come back.
 
