@@ -4,14 +4,17 @@ from models.models import User, Course
 from models.database import db
 
 def register_page():
+    if not request.headers.get('HX-Request'):
+        return 
     if 'user_id' in session:
         user = db.session.get(User, session['user_id'])
         if user is None:
             session.pop('user_id', None)
             return redirect(url_for('login'))
+
         if user.is_admin:
-            return redirect(url_for('admin_courses'))
-        return redirect(url_for('courses'))
+            return '', 302, {'HX-Redirect': url_for('admin_courses')}
+        return '', 302, {'HX-Redirect': url_for('courses')}  # HTMX client-side redirect
 
     errors = {}
     if request.method == 'POST':
@@ -54,8 +57,8 @@ def register_page():
             )
             db.session.add(new_user)
             db.session.commit()
-            flash('Registration successful! Please login.')
-            return redirect(url_for('login'))
+            flash('Registration successful! Please login.', 'success')
+            return '', 302, {'HX-Redirect': url_for('login')}  # HTMX client-side redirect
         return render_template('register.html', errors=errors)
 
     # Get request
@@ -67,9 +70,11 @@ def login_page():
         if user is None:
             session.pop('user_id', None)
             return redirect(url_for('login'))
-        if user.is_admin:
-            return redirect(url_for('admin_courses'))
-        return redirect(url_for('courses'))
+
+        if request.headers.get('HX-Request'):  # Check if HTMX request
+            if user.is_admin:
+                return '', 302, {'HX-Redirect': url_for('admin_courses')}
+            return '', 302, {'HX-Redirect': url_for('courses')}  # HTMX client-side redirect
 
     if request.method == 'POST':
         username = request.form['username']
@@ -82,14 +87,16 @@ def login_page():
             session['user_id'] = user.id
             session['user_level'] = user.level
             session['user_points'] = user.points
-            if user.is_admin:
-                return redirect(url_for('admin_courses'))
-            return redirect(url_for('courses'))
-        flash('Invalid credentials!')
+
+            if request.headers.get('HX-Request'):  # Check if HTMX request
+                if user.is_admin:
+                    return redirect(url_for('admin_courses'))
+                return '', 302, {'HX-Redirect': url_for('courses')}  # HTMX client-side redirect
+        flash('Invalid credentials!', 'error')
 
     # Get Request
     return render_template('login.html')
 
 def logout_page():
     session.pop('user_id', None)
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
