@@ -9,7 +9,7 @@ def chapter_page(chapter_id):
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.pop('user_id', None)
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
 
     # Get current course
     # current_course_id = session['current_course_id']

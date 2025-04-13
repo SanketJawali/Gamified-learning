@@ -10,7 +10,7 @@ def register_page():
         user = db.session.get(User, session['user_id'])
         if user is None:
             session.pop('user_id', None)
-            return redirect(url_for('login'))
+            return redirect(url_for('home'))
 
         if user.is_admin:
             return '', 302, {'HX-Redirect': url_for('admin_courses')}
@@ -69,12 +69,14 @@ def login_page():
         user = db.session.get(User, session['user_id'])
         if user is None:
             session.pop('user_id', None)
-            return redirect(url_for('login'))
+            return redirect(url_for('home'))
 
         if request.headers.get('HX-Request'):  # Check if HTMX request
             if user.is_admin:
                 return '', 302, {'HX-Redirect': url_for('admin_courses')}
             return '', 302, {'HX-Redirect': url_for('courses')}  # HTMX client-side redirect
+        else:
+            return redirect(url_for('home'))
 
     if request.method == 'POST':
         username = request.form['username']

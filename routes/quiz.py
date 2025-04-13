@@ -12,7 +12,7 @@ def quiz_page(quiz_id):
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.pop('user_id', None)
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     if not user.level:
         return redirect(url_for('quiz'))
     
@@ -24,7 +24,7 @@ def quiz_logic_page(quiz_id):
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.pop('user_id', None)
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     if not user.level:
         return redirect(url_for('quiz'))
 

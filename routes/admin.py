@@ -17,7 +17,7 @@ def admin_courses_page():
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.clear()
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     
     if request.method == 'POST':
         try:

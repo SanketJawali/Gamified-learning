@@ -5,11 +5,11 @@ from .helpers import get_course_image
 
 def courses_page():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.pop('user_id', None)
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     if user.is_admin:
         return redirect(url_for('admin_courses'))
     courses = Course.query.all()
@@ -58,7 +58,7 @@ def select_course_page():
 def set_current_course_session():
     if 'user_id' not in session:
         flash('Please login first', 'error')
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     
     course_id = request.form.get('course_id')
     course = db.session.get(Course, course_id)

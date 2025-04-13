@@ -8,7 +8,7 @@ def profile_page():
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.pop('user_id', None)
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
             
     course_id = session['current_course_id']
     course = Course.query.get(course_id)
@@ -18,7 +18,7 @@ def profile_page():
 
 def contact_support_page():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.pop('user_id', None)
@@ -31,7 +31,7 @@ def select_level_page():
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.pop('user_id', None)
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     if request.method == 'POST':
         level = request.form['level']
         if level in ['Beginner', 'Intermediate', 'Advanced']:
@@ -43,12 +43,12 @@ def select_level_page():
 
 def achievements_page():
     if 'user_id' not in session:
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('home'))
     
     user = User.query.get(session['user_id'])
     if not user:
         session.pop('user_id', None)
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('home'))
     
     # Get user's earned achievements
     user_achievements = UserAchievement.query.filter_by(user_id=user.id).all()

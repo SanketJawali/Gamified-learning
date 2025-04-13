@@ -9,7 +9,7 @@ def code_page():
     user = db.session.get(User, session['user_id'])
     if user is None:
         session.pop('user_id', None)
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     if user.is_admin:
         return redirect(url_for('admin_courses'))
 
