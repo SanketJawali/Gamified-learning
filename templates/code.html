@@ -1,48 +1,94 @@
-<style>
-    .editor-container {
-    margin: 20px auto;
-    padding: 10px auto;
-    position: relative;
-    z-index: 30;
-    }
-
-    #editor {
-    position: relative;
-    left: 50%;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    height: 90%;
-    width: 95%;
-    font-size: 20px;
-    transform: translate(-50%, 0%);
-    }
-</style>
-
-<link
-            href="https://cdn.jsdelivr.net/npm/daisyui@5"
-            rel="stylesheet"
-            type="text/css"
-        />
-<link rel="stylesheet" href="{{url_for('static',filename='dist/output.css')}}">
-
-<div
-    class="flex items-center justify-center gap-2 w-60 m-4 btn btn-soft btn-primary"
->
-    <img src="/static/arrow_b.png" alt="back" class="size-6">
-    <a href="{{ url_for('lessons') }}">Back to Lessons</a>
-</div>
-
-<div class="editor-container">
-    <div id="editor"></div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.39.1/ace.js"></script>
-<script>
-    let editor = document.querySelector("#editor");
-
-    ace.edit(editor, {
-    theme: "ace/theme/cobalt",
-    mode: "ace/mode/python",
-    });
-</script>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gamified Learning</title>
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{url_for('static',filename='dist/output.css')}}">
+        
+        <!-- CodeMirror CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+        <!-- CodeMirror JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+        <!-- Add modes for languages you need -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    </head>
+    <body>
+        <style>
+            .editor-container {
+                margin: 20px auto;
+                padding: 10px auto;
+                position: relative;
+                z-index: 30;
+            }
+    
+            .CodeMirror {
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+                height: 400px;  /* Fixed height */
+                width: 95%;
+                font-size: 20px;
+                border: 1px solid #ddd;  /* Optional border */
+                border-radius: 4px;      /* Optional rounded corners */
+            }
+        </style>
+    
+        <div class="flex items-center justify-center gap-2 w-60 m-4 btn btn-soft btn-primary">
+            <img src="/static/arrow_b.png" alt="back" class="size-6">
+            <a href="{{ url_for('lessons') }}">Back to Lessons</a>
+        </div>
+    
+        <div class="editor-container p-8">
+            <textarea id="editor">print("Hello World")</textarea>
+            <button class="btn btn-success" id="runBtn" style="margin: 20px; margin-left: 38px;">Run code</button>
+            <div id="output" style="margin: 20px; margin-left: 38px;"></div>
+        </div>
+    
+        <script>
+            // Initialize CodeMirror
+            var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+                lineNumbers: true,
+                mode: 'python',
+                theme: 'dracula',
+                indentUnit: 4
+            });
+            
+            document.getElementById('runBtn').addEventListener('click', async function() {
+                const code = editor.getValue();
+                const outputDiv = document.getElementById('output');
+                
+                outputDiv.innerHTML = "Running code...";
+                
+                try {
+                    const response = await fetch('/run', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({code: code})
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        outputDiv.innerHTML = `<span style="color:red">Error: ${data.error}</span>`;
+                    } else {
+                        outputDiv.innerHTML = data.output.replace(/\n/g, '<br>');
+                    }
+                } catch (error) {
+                    outputDiv.innerHTML = `<span style="color:red">Error: ${error.message}</span>`;
+                    console.error('Error:', error);
+                }
+            });
+        </script>
+    </body>
+</html>

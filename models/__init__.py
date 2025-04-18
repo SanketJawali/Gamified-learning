@@ -16,6 +16,7 @@ def init_db(app):
                 year='4th Year',
                 password='admin123',
                 is_admin=True,
+                is_verified=True,
                 level='1'
             )
             db.session.add(admin)

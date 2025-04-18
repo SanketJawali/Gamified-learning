@@ -1,50 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div>
+<div class="bg-[url(https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);] bg-cover bg-center bg-fixed h-screen w-full">
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
     {% for category,message in messages %}
-            <div role="alert" class="alert alert-{{ category }} max-w-md mx-auto ">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{{ message }}</span>
-            </div>
+        <div role="alert" class="alert alert-{{ category }} max-w-md mx-auto">
+            {% if category == 'success' %}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {% elif category == 'warning' %}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            {% elif category == 'error' %}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {% elif category == 'info' %}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            {% elif category == 'alert' %}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info h-6 w-6 shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            {% endif %}
+            <span>{{ message }}</span>
+        </div>
 
     {% endfor %}
 {% endif %}
 {% endwith %}
-    <div class="min-h-screen text-black">
+    <div class="min-h-screen w-full bg-black/50 backdrop-blur-sm">
         <div class="min-h-screen flex items-center justify-center">
-            <div class="card bg-white shadow-lg rounded-lg p-8 mt-8 pt-2 pb-2">
+            <div class="card w-full max-w-md bg-white shadow-lg rounded-lg p-8 mt-8 pt-2 pb-2">
                 <div class="flex justify-center">
                     <img class="size-20" src="/static/logo.png" alt="logo">
                 </div>
-
-                <!-- Heading -->
-                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Create your account</h2>
-                <!-- Form -->
-                <form method="POST" hx-post="/register" hx-target="#container" class="space-y-4">
+                    <!-- Heading -->
+                    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Create your account</h2>
+                    <!-- Form -->
+                    <form method="POST" class="space-y-4">
                 <!-- Name -->
-                    <div style="text-align: left; width: 400px;">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                        <input type="text" id="name" name="name" value="{{ request.form.name or '' }}" class="input input-bordered w-full mt-1 pl-2 border-solid border-2" required>
-                        {% if errors.name %}<span class="text-red-500 text-sm mt-1 block">{{ errors.name }}</span>{% endif %}
+                    <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" value="{{ request.form.name or '' }}" class="input input-bordered w-full mt-1 pl-2 border-solid border-2" required>
+                    {% if errors.name %}<span class="text-red-500 text-sm mt-1 block">{{ errors.name }}</span>{% endif %}
                     </div>
                     <!-- Username -->
-                    <div style="text-align: left; width: 400px;">
+                    <div>
                         <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
                         <input type="text" id="username" name="username" value="{{ request.form.username or '' }}" class="input input-bordered w-full mt-1 pl-2 border-solid border-2" required>
                         {% if errors.username %}<span class="text-red-500 text-sm mt-1 block">{{ errors.username }}</span>{% endif %}
                     </div>
                     <!-- Email -->
-                    <div style="text-align: left; width: 400px;">
+                    <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
                         <input type="email" id="email" name="email" value="{{ request.form.email or '' }}" class="input input-bordered w-full mt-1 pl-2 border-solid border-2" required>
                         {% if errors.email %}<span class="text-red-500 text-sm mt-1 block">{{ errors.email }}</span>{% endif %}
                     </div>
                     <!-- Stream -->
-                    <div style="text-align: left; width: 400px;">
+                    <div>
                         <label for="stream" class="block text-sm font-medium text-gray-700">Stream</label>
                         <select id="stream" name="stream" class="select select-bordered w-full mt-1 border-solid border-2 pl-2">
                             <option value="" {% if not request.form.stream %}selected{% endif %}>Select Stream</option>
@@ -54,7 +73,7 @@
                         {% if errors.stream %}<span class="text-red-500 text-sm mt-1 block">{{ errors.stream }}</span>{% endif %}
                     </div>
                     <!-- Year -->
-                    <div style="text-align: left; width: 400px;">
+                    <div>
                         <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
                         <select id="year" name="year" class="select select-bordered w-full mt-1 border-solid border-2 pl-2 pl-2">
                             <option value="" {% if not request.form.year %}selected{% endif %}>Select Year</option>
@@ -66,13 +85,13 @@
                         {% if errors.year %}<span class="text-red-500 text-sm mt-1 block">{{ errors.year }}</span>{% endif %}
                     </div>
                     <!-- Password -->
-                    <div style="text-align: left; width: 400px;">
+                    <div>
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="password" name="password" class="input input-bordered w-full mt-1 pl-2 border-solid border-2" required>
                         {% if errors.password %}<span class="text-red-500 text-sm mt-1 block">{{ errors.password }}</span>{% endif %}
                     </div>
                     <!-- Confirm Password -->
-                    <div style="text-align: left; width: 400px;">
+                    <div>
                         <label for="confirm_password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
                         <input type="password" id="confirm_password" name="confirm_password" class="input input-bordered w-full mt-1 pl-2 border-solid border-2" required>
                         {% if errors.confirm_password %}<span class="text-red-500 text-sm mt-1 block">{{ errors.confirm_password }}</span>{% endif %}
@@ -83,13 +102,10 @@
                 <!-- Footer Link -->
                 <p class="text-center mt-6 text-sm text-gray-600">
                     Already have an account?
-                    <a hx-get="/login"
-                        hx-swap="innerhtml"
-                        hx-target="#container" 
-                        class="text-blue-600 hover:underline cursor-pointer"
-                        >Sign in</a>
+                    <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">Sign in</a>
                 </p>
             </div>
         </div>
-    </div>
+    </di>
 </div>
+{% endblock %}

@@ -6,7 +6,7 @@ from .lesson import lessons_page
 from .quiz import quiz_page, quiz_logic_page
 from .user import profile_page
 from .chapter import chapter_page
-from .code import code_page
+from .code import code_page, run_code
 
 def init_admin(app):
     app.add_url_rule('/admin_courses', 'admin_courses', admin_courses_page, methods=['GET', 'POST'])
@@ -40,3 +40,4 @@ def init_user(app):
 
 def init_code(app):
     app.add_url_rule('/code', 'code', code_page)
+    app.add_url_rule('/run', 'run', run_code, methods=['POST'])

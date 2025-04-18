@@ -1,5 +1,6 @@
 from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 from models import init_db, db
 from routes import *
 from routes.helpers import *
@@ -15,6 +16,14 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = 'mysecret123'
+
+    # Flask-Mail configuration
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = 'gamifiedlearnig.pvt.ltd@gmail.com'  # Replace with your Gmail address
+    app.config['MAIL_PASSWORD'] = 'pfcvyxokglcgkurc'  # Replace with your Gmail App Password
+    app.config['MAIL_DEFAULT_SENDER'] = 'gamifiedlearnig.pvt.ltd@gmail.com'  # Default sender for emails
 
     app.jinja_env.globals.update(chr=chr)
     app.jinja_env.globals.update(get_achievement_by_code=get_achievement_by_code)
@@ -56,6 +65,11 @@ def create_app():
 
     app.add_url_rule('/code', 'code', code.code_page)
 
+    app.add_url_rule('/run', 'run_code', code.run_code, methods=['POST'])
+
+    # Add verify-email route
+    app.add_url_rule('/verify-email', 'verify_email', auth_routes.verify_email)
+
     app.add_url_rule('/logout', 'logout', auth_routes.logout_page)
 
     @app.route('/favicon.ico')
@@ -80,6 +94,9 @@ def create_app():
 
 
 app = create_app()
+
+# Initialize Flask-Mail
+mail = Mail(app)
 
 if __name__ == '__main__':
     app.run(debug=True)

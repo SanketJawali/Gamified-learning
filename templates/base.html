@@ -94,16 +94,16 @@
                     </div>
                 </div>
                 {% else %}
-                    <a hx-get="/login"
-                        hx-swap="innerhtml"
-                        hx-target="#container" 
-                        class="text-black pr-4 hover:underline cursor-pointer"
-                        >Login</a>
+                <a href="{{ url_for('login') }}" class="pr-5">Login</a>
                 {% endif %}
             </div>
 
             <main class="flex-grow">{% block content %}{% endblock %}</main>
 
+            <!-- <div class="divider"></div>
+            <footer class="bottom-0">
+                <p>&copy; 2025 Gamified Learning</p>
+            </footer> -->
         </div>
     </body>
 </html>

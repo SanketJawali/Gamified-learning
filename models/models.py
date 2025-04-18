@@ -21,6 +21,7 @@ class User(db.Model):
     points = db.Column(db.Integer, default=0)
     level = db.Column(db.Integer, default=1)
     is_admin = db.Column(db.Boolean, default=False)
+    is_verified = db.Column(db.Boolean, default=False)  # Add is_verified column
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
     

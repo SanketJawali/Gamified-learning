@@ -10,7 +10,7 @@
     "
 >
     <div class="hero-overlay bg-black/50 backdrop-blur-sm"></div>
-    <div id="container" class="hero-content text-neutral-content text-center" style="min-width: 400px;">
+    <div class="hero-content text-neutral-content text-center">
         <div class="max-w-md">
             <h1 class="mb-5 text-5xl font-bold">
                 Best way of learing to Code!
@@ -19,11 +19,8 @@
                 Level up your coding skills like a game—earn XP, unlock
                 achievements, and climb the ranks while mastering real code!
             </p>
-            <a class="btn btn-primary"
-                hx-get="/login"
-                hx-target="#container"
-                hx-swap="innerhtml"
-            >Get Started
+            <a class="btn btn-primary" href="{{ url_for('login') }}"
+                >Get Started
                 <span class="material-symbols-outlined"> arrow_forward </span>
             </a>
         </div>
